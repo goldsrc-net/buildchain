@@ -43,9 +43,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Multilib (32-bit x86) is only available on amd64. On arm64 there is
 # no multilib analog — the i386 build path doesn't apply there anyway,
 # but on amd64 we want it for the i386 amxmodx target.
+#
+# linux-libc-dev:i386 supplies /usr/include/i386-linux-gnu/asm/errno.h
+# and friends, which `cc -m32` searches for. gcc-multilib brings in
+# the 64-bit variant only.
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      apt-get update && apt-get install -y --no-install-recommends \
-        gcc-multilib g++-multilib libc6-dev-i386 \
+      dpkg --add-architecture i386 \
+      && apt-get update && apt-get install -y --no-install-recommends \
+        gcc-multilib g++-multilib libc6-dev-i386 linux-libc-dev:i386 \
       && rm -rf /var/lib/apt/lists/*; \
     fi
 
