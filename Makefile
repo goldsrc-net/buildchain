@@ -73,7 +73,7 @@ amxmodx-i386:
 	  cd build_i386; \
 	  ambuild-python ../configure.py \
 	    --target-arch=i386 \
-	    --no-mysql \
+	    --mysql=system \
 	    --metamod=/work/metamod \
 	    --hlsdk=/work/hlsdk; \
 	  ambuild'
@@ -87,7 +87,7 @@ amxmodx-amd64:
 	  cd build_amd64; \
 	  ambuild-python ../configure.py \
 	    --target-arch=amd64 \
-	    --no-mysql \
+	    --mysql=system \
 	    --metamod=/work/metamod \
 	    --hlsdk=/work/hlsdk; \
 	  ambuild'
@@ -107,7 +107,7 @@ amxmodx-aarch64:
 	  CXX=aarch64-linux-gnu-g++-12 \
 	    ambuild-python ../configure.py \
 	      --target-arch=aarch64 \
-	      --no-mysql \
+	      --mysql=system \
 	      --metamod=/work/metamod \
 	      --hlsdk=/work/hlsdk; \
 	  ambuild'

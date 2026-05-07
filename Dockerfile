@@ -82,6 +82,21 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
       ln -sf /usr/bin/aarch64-linux-gnu-g++-12  /usr/local/bin/aarch64-linux-gnu-g++; \
     fi
 
+# MariaDB Connector/C — needed by amxmodx's mysqlx module. Debian's
+# libmariadb-dev ships headers in a single non-multiarch path, so we
+# can only install the dev package for one arch (amd64) — that gives
+# us the headers + amd64 static lib. For the other archs we install
+# the runtime-only libmariadb3:<arch> package (provides
+# libmariadb.so.3 in /usr/lib/<triplet>/) and link dynamically against
+# it. The deploy host needs libmariadb3 installed, which is the
+# default any time MariaDB / MySQL is in play.
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+      apt-get update && apt-get install -y --no-install-recommends \
+        libmariadb-dev \
+        libmariadb3:i386 libmariadb3:arm64 \
+      && rm -rf /var/lib/apt/lists/*; \
+    fi
+
 # AMBuild from upstream master. Not on PyPI; install from source.
 # Symlinks lose the venv context (they resolve to system python), so we
 # use small wrapper scripts that exec the venv interpreter directly.
