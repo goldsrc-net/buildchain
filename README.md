@@ -6,9 +6,14 @@ branches.
 
 ## What it provides
 
-- `Dockerfile` — debian:12 base image with all build deps:
-  - GCC 12 (native + multilib for i386)
-  - GCC 12 aarch64 cross-toolchain (on amd64 hosts)
+A **single** `hlds64-buildchain:debian12` image that handles every
+target arch — i386, amd64, aarch64 — via cross-compilation. No
+separate per-arch images, no platform switching at run time.
+
+- `Dockerfile` — debian:12 base with:
+  - GCC 12 native + i386 multilib + aarch64 cross-toolchain
+  - arm64 multi-arch sysroot (so AMBuild's compiler-probe binaries
+    execute via QEMU + binfmt_misc on the host)
   - NASM 2.16 (Debian build, syntax-correct unlike the Ubuntu ESM build)
   - AMBuild 2.0 from upstream master
   - Python 3.11
