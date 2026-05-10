@@ -13,7 +13,7 @@
 [submodule "halflife-updated"]
 	path = halflife-updated
 	url = https://github.com/goldsrc-net/halflife-updated.git
-	branch = 64bit
+	branch = 64bit-demo
 [submodule "ReHLDS"]
 	path = ReHLDS
 	url = https://github.com/goldsrc-net/ReHLDS.git
