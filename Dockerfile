@@ -21,8 +21,8 @@ FROM debian:12
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    gcc-12 g++-12 \
+    gcc-11 g++-11 \
+    make libc6-dev \
     \
     git \
     curl \
@@ -30,15 +30,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     \
     nasm \
     \
-    python3 python3-pip python3-venv \
+    python3 python3-pip python3-venv python-is-python3 \
     \
     cmake \
+    ninja-build \
     pkg-config \
     \
     file \
     binutils \
     \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+ && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 \
+ && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100 \
+ && update-alternatives --install /usr/bin/cc  cc  /usr/bin/gcc-11 100 \
+ && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-11 100
 
 # Multilib (32-bit x86) is only available on amd64. On arm64 there is
 # no multilib analog — the i386 build path doesn't apply there anyway,
@@ -50,7 +55,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
       dpkg --add-architecture i386 \
       && apt-get update && apt-get install -y --no-install-recommends \
-        gcc-multilib g++-multilib libc6-dev-i386 linux-libc-dev:i386 \
+        gcc-11-multilib g++-11-multilib \
+        libc6-dev-i386 linux-libc-dev:i386 \
       && rm -rf /var/lib/apt/lists/*; \
     fi
 
@@ -67,7 +73,7 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
       dpkg --add-architecture arm64 \
       && apt-get update && apt-get install -y --no-install-recommends \
-        gcc-12-aarch64-linux-gnu g++-12-aarch64-linux-gnu \
+        gcc-11-aarch64-linux-gnu g++-11-aarch64-linux-gnu \
         binutils-aarch64-linux-gnu \
         libc6-dev-arm64-cross \
         libc6:arm64 libstdc++6:arm64 \
@@ -75,11 +81,15 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
     fi
 
 # Provide unversioned cross-toolchain aliases so AMBuild can pick them
-# up via CC=aarch64-linux-gnu-gcc / CXX=aarch64-linux-gnu-g++. Only
-# matters on amd64 hosts.
+# up via CC=aarch64-linux-gnu-gcc / CXX=aarch64-linux-gnu-g++. Symlinks
+# live in /usr/bin/ so CMake toolchain files that probe for
+# `EXISTS /usr/bin/aarch64-linux-gnu-gcc` (halflife-updated/cmake/
+# LinuxToolchain-aarch64.cmake, ReHLDS/cmake/aarch64-linux-gnu.toolchain.cmake)
+# pick them up automatically — no AARCH64_GCC env override needed.
+# Only matters on amd64 hosts.
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      ln -sf /usr/bin/aarch64-linux-gnu-gcc-12  /usr/local/bin/aarch64-linux-gnu-gcc; \
-      ln -sf /usr/bin/aarch64-linux-gnu-g++-12  /usr/local/bin/aarch64-linux-gnu-g++; \
+      ln -sf /usr/bin/aarch64-linux-gnu-gcc-11  /usr/bin/aarch64-linux-gnu-gcc; \
+      ln -sf /usr/bin/aarch64-linux-gnu-g++-11  /usr/bin/aarch64-linux-gnu-g++; \
     fi
 
 # MariaDB Connector/C — needed by amxmodx's mysqlx module. Debian's
