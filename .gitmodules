@@ -1,0 +1,28 @@
+[submodule "rcbotold"]
+	path = rcbotold
+	url = https://github.com/goldsrc-net/rcbotold.git
+	branch = 64bit
+[submodule "Metamod-R"]
+	path = Metamod-R
+	url = https://github.com/goldsrc-net/Metamod-R.git
+	branch = 64bit
+[submodule "amxmodx"]
+	path = amxmodx
+	url = https://github.com/goldsrc-net/amxmodx.git
+	branch = 64bit
+[submodule "halflife-updated"]
+	path = halflife-updated
+	url = https://github.com/goldsrc-net/halflife-updated.git
+	branch = 64bit
+[submodule "ReHLDS"]
+	path = ReHLDS
+	url = https://github.com/goldsrc-net/ReHLDS.git
+	branch = 64bit
+[submodule "metamod-hl1"]
+	path = metamod-hl1
+	url = https://github.com/alliedmodders/metamod-hl1.git
+	branch = master
+[submodule "hlsdk"]
+	path = hlsdk
+	url = https://github.com/alliedmodders/hlsdk.git
+	branch = master

@@ -26,7 +26,17 @@
 
 IMAGE      := hlds64-buildchain:debian12
 
-SRC_ROOT   ?= $(HOME)/Packages
+# Default source root is the buildchain repo itself — submodules at
+# rcbotold/, Metamod-R/, amxmodx/, halflife-updated/, ReHLDS/,
+# metamod-hl1/, and hlsdk/ are pinned to known-good SHAs.
+#
+# Override SRC_ROOT to use a different parent dir (e.g. for working
+# outside the submodule pins against your live local trees):
+#
+#   make all SRC_ROOT=$HOME/Packages
+#
+# Per-project overrides (RCBOT_PATH etc.) take precedence over SRC_ROOT.
+SRC_ROOT   ?= $(CURDIR)
 RCBOT      := $(or $(RCBOT_PATH),$(SRC_ROOT)/rcbotold)
 METAMODR   := $(or $(METAMODR_PATH),$(SRC_ROOT)/Metamod-R)
 METAMOD_HL1 := $(or $(METAMOD_HL1_PATH),$(SRC_ROOT)/metamod-hl1)

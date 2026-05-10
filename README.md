@@ -32,18 +32,14 @@ under `build_<arch>/` (ambuild) or `build-<arch>/` (cmake). See
 ## Prerequisites
 
 - **Docker** (Desktop or Engine, any reasonably recent version)
-- **Five source repos** under `~/Packages/` (or override with env vars,
-  see [Source paths](#source-paths)):
+- **Submodules initialized.** If you cloned with `--recursive`, you're
+  done. Otherwise:
+  ```bash
+  git submodule update --init --recursive
   ```
-  ~/Packages/
-    rcbotold/            # your fork or upstream
-    Metamod-R/
-    metamod-hl1/         # classic Metamod (used for amxmodx headers)
-    amxmodx/
-    hlsdk/               # alliedmodders/hlsdk mirror
-    halflife-updated/
-    ReHLDS/
-  ```
+  The submodules pin known-good SHAs of each consumer repo's `64bit`
+  branch (and upstream `master` for the support deps `metamod-hl1` +
+  `hlsdk`).
 - **About 8 GB of disk** for the docker image + build artifacts.
 
 ## Build commands
@@ -87,14 +83,16 @@ make clean    # wipe build_*/build-* dirs across all repos
 
 ## Source paths
 
-Defaults to `~/Packages/<project>/`. Override the root or any individual
-project:
+Defaults to `$(CURDIR)/<project>/` — the buildchain's own pinned
+submodules. Override `SRC_ROOT` to build against trees somewhere else
+(e.g. your local working copies during iteration), or override
+individual projects:
 
 ```bash
-# move the whole tree
-make all SRC_ROOT=/somewhere/else
+# build against your live local trees instead of the pinned submodules
+make all SRC_ROOT=$HOME/Packages
 
-# point at a non-default location for one project
+# point at a non-default location for one project, leave the rest pinned
 make halflife-updated-aarch64 HALFLIFE_PATH=/path/to/halflife-updated
 ```
 
