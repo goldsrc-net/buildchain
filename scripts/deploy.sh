@@ -129,6 +129,28 @@ EOF
     fi
 }
 
+# apply_admins <users.ini-path>  — append entries from $ADMINS_FILE
+# (default: scripts/admins.txt next to this script) to the given
+# users.ini if not already present. Idempotent on exact-line match.
+# No-op if either file is missing. Lines starting with # or ; in
+# admins.txt are skipped as comments. Lets us keep site-specific
+# admin SteamIDs in the buildchain rather than the upstream amxmodx
+# submodule, while having every deploy carry them.
+apply_admins() {
+    local users_ini="$1"
+    local admins_file="${ADMINS_FILE:-$(dirname "$(readlink -f "$0")")/admins.txt}"
+    [[ -f "$users_ini"   ]] || return 0
+    [[ -f "$admins_file" ]] || return 0
+    local line
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        case "$line" in ''|'#'*|';'*) continue ;; esac
+        if ! grep -qFx -- "$line" "$users_ini"; then
+            echo "$line" >> "$users_ini"
+            echo "  + admin: $line"
+        fi
+    done < "$admins_file"
+}
+
 # --- per-project copy logic ----------------------------------------
 
 deploy_rcbot() {
@@ -171,6 +193,7 @@ deploy_amxmodx() {
     if [[ -f "$core" ]]; then
         stage_file "$core" "valve/addons/amxmodx/dlls/amxmodx_mm_${ARCH}.so"
     fi
+    apply_admins "$(stage_path)/valve/addons/amxmodx/configs/users.ini"
 }
 
 deploy_halflife_updated() {

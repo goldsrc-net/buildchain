@@ -1,0 +1,12 @@
+# Admins to inject into the deployed amxmodx users.ini on every
+# `make deploy-<…>-amxmodx` run. This file lives in the buildchain
+# so site-specific admin lists never touch the upstream amxmodx
+# submodule.
+#
+# Format matches amxmodx users.ini exactly:
+#   <name|ip|steamid> <password> <access flags> <account flags>
+#
+# Access flags abcdefghijklmnopqrstuv == full admin. Account flag
+# "ce" = steamid + no password required.
+
+"STEAM_0:1:205584" "" "abcdefghijklmnopqrstuv" "ce"

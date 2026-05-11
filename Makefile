@@ -63,7 +63,7 @@ RIG_I386     ?= $(HOME)/Containers/hlds/hlds-linux32-test
 RIG_AMD64    ?= $(HOME)/Containers/hlds/hlds-linux64-test
 RIG_AARCH64  ?= $(HOME)/Containers/hlds/hlds-arm64
 PLEB_HOST    ?= 10.23.23.80
-PLEB_PATH    ?= /opt/hlds
+PLEB_PATH    ?= ~/hlds-arm64
 
 DOCKER     := docker
 # BuildKit on this host (Docker Desktop 29.4.2) intermittently fails to
@@ -353,7 +353,7 @@ help:
 	@echo 'Rigs:     i386 → ~/Containers/hlds/hlds-linux32-test/'
 	@echo '          amd64 → ~/Containers/hlds/hlds-linux64-test/'
 	@echo '          aarch64 → ~/Containers/hlds/hlds-arm64/'
-	@echo '          pleb → 10.23.23.80:/opt/hlds  (rsync over ssh)'
+	@echo '          pleb → 10.23.23.80:~/hlds-arm64  (rsync over ssh)'
 	@echo ''
 	@echo 'Other:'
 	@echo '  make image                       # rebuild the docker image'
@@ -365,7 +365,7 @@ help:
 	@echo '  RCBOT_PATH / METAMODR_PATH / AMXMODX_PATH / HALFLIFE_PATH / REHLDS_PATH'
 	@echo '                                    per-project source override'
 	@echo '  RIG_I386 / RIG_AMD64 / RIG_AARCH64   local rig dir override'
-	@echo '  PLEB_HOST=10.23.23.80   PLEB_PATH=/opt/hlds   remote target'
+	@echo '  PLEB_HOST=10.23.23.80   PLEB_PATH=~/hlds-arm64   remote target'
 	@echo ''
 	@echo 'Examples:'
 	@echo '  make                                       # default: build'
