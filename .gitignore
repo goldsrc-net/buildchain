@@ -13,5 +13,12 @@
 # (downloaded from consumer CI runs; produced fresh on demand).
 /release-assets/
 
+# Drop-in zips composed by scripts/build-dropins.sh.
+/release-dropins/
+
+# Steam CDN packages cached during drop-in builds (content-addressed,
+# refetches are idempotent).
+/release-cache/
+
 # Local notes — agent transcripts, working drafts.
 /notes/

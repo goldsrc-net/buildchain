@@ -1,0 +1,122 @@
+name: Release drop-ins
+
+# Compose 5 per-arch HLDS drop-in zips from the consumer-repo CI artifacts
+# at the buildchain's currently-pinned SHAs, then attach them to a GitHub
+# release on this repo.
+#
+# Triggered by pushing a tag matching `dropin-v*`, or manually via
+# workflow_dispatch (supply the tag name).  Tag should point at a commit
+# on `main` whose submodule pins are the ones you want to ship.
+
+on:
+  push:
+    tags: ['dropin-v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the release (e.g. dropin-v1.0.0). Must already exist on the repo.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build:
+    name: Build + publish drop-ins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Resolved tag: $TAG"
+
+      - name: Checkout buildchain @ tag
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+          # No submodules — fetch-release-artifacts.sh reads pinned SHAs
+          # from the index, which the checkout includes.
+
+      - name: Verify pins have green CI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/verify-pins.sh
+
+      - name: Fetch per-consumer release artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/fetch-release-artifacts.sh
+
+      - name: Compose drop-ins
+        run: bash scripts/build-dropins.sh
+
+      - name: Upload drop-ins to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG='${{ steps.tag.outputs.tag }}'
+
+          # Pin set (short SHAs) for the release notes.  All from the index.
+          pin() { git ls-files -s "$1" | awk '{print substr($2,1,7)}'; }
+          NOTES_FILE=$(mktemp)
+          {
+            echo "Per-arch drop-ins for a HLDS / ReHLDS dedicated server with"
+            echo "Metamod-R + amxmodx + rcbot + halflife-updated preconfigured."
+            echo ""
+            echo "## Drop-in shape"
+            echo ""
+            echo "- ReHLDS engine + HLTV at zip root."
+            echo "- \`valve/dlls/hl.{so,dll}\` from halflife-updated."
+            echo "- \`valve/addons/metamod/dlls/{metamod,rcbot_mm}_<arch>.{so,dll}\`."
+            echo "- \`valve/addons/rcbot/\` data tree."
+            echo "- \`valve/addons/amxmodx/\` (base) + \`{cstrike,dod,esf,ns,tfc,ts}/addons/amxmodx/\`."
+            echo "- \`apply-liblist.{sh,bat}\` helper that wires \`gamedll[_linux]\` in \`valve/liblist.gam\`."
+            echo ""
+            echo "## How to use"
+            echo ""
+            echo "1. Install HLDS via \`steamcmd +app_update 90\`."
+            echo "2. Extract the matching per-arch zip on top."
+            echo "3. Run \`apply-liblist.sh\` (Linux) or \`apply-liblist.bat\` (Windows)."
+            echo "4. Start the server."
+            echo ""
+            echo "Half-Life game data (maps, sprites, sounds, *.wad) and the"
+            echo "Valve-supplied client libs (\`steamclient\`, \`libtier0\`,"
+            echo "\`vgui\`, \`voice_*\`, ...) come from steamcmd, not this drop-in."
+            echo ""
+            echo "## Built from"
+            echo ""
+            echo "| Project | Pinned SHA |"
+            echo "|---|---|"
+            echo "| amxmodx | \`$(pin amxmodx)\` |"
+            echo "| halflife-updated | \`$(pin halflife-updated)\` |"
+            echo "| Metamod-R | \`$(pin Metamod-R)\` |"
+            echo "| rcbotold | \`$(pin rcbotold)\` |"
+            echo "| ReHLDS | \`$(pin ReHLDS)\` |"
+          } > "$NOTES_FILE"
+
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG exists — updating notes + replacing assets."
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --notes-file "$NOTES_FILE" \
+              --title "HLDS drop-ins $TAG"
+            # Replace assets idempotently.
+            for f in release-dropins/*.zip; do
+              gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" "$f" --clobber
+            done
+          else
+            echo "Creating release $TAG."
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --title "HLDS drop-ins $TAG" \
+              --notes-file "$NOTES_FILE" \
+              release-dropins/*.zip
+          fi
