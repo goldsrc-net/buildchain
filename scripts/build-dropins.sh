@@ -122,8 +122,16 @@ stage_rcbot() {
   rm -rf "$tmp" && mkdir -p "$tmp"
   unzip -q "$zip" -d "$tmp"
 
-  mkdir -p "$stage/valve/addons"
-  cp -a "$tmp/rcbot" "$stage/valve/addons/rcbot"
+  # rcbot's globals.cpp:126 hardcodes the default botFolder() to the
+  # literal string "rcbot" — a CWD-relative path that resolves to
+  # <install_root>/rcbot/ since HLDS chdirs to install root.  Match
+  # upstream's rcbot_readme.txt ("Extract it to Half-Life folder ONLY,
+  # NOT the MOD folder") rather than relocating under valve/addons/.
+  # The binary stays under valve/addons/metamod/dlls/ for symmetry
+  # with metamod_<arch>; the generated plugins.ini references it via
+  # the gamedir-relative path we write below.
+  cp -a "$tmp/rcbot" "$stage/rcbot"
+  mkdir -p "$stage/valve/addons/metamod/dlls"
   cp "$tmp/dlls/rcbot_mm_${arch}.${ext}" \
      "$stage/valve/addons/metamod/dlls/rcbot_mm_${arch}.${ext}"
 }
@@ -293,7 +301,9 @@ Produced by the goldsrc-net/buildchain release pipeline.
 - **Metamod-R** (\`valve/addons/metamod/dlls/metamod_${arch}.${ext}\`) plus
   its \`config.ini\` template.
 - **rcbot** plugin (\`valve/addons/metamod/dlls/rcbot_mm_${arch}.${ext}\`)
-  and the upstream rcbot data tree (\`valve/addons/rcbot/\`).
+  and the upstream rcbot data tree at install root (\`rcbot/\`) — rcbot
+  hardcodes a cwd-relative \`rcbot/\` lookup; matches upstream's
+  \`rcbot_readme.txt\`.
 - **amxmodx** core + 6 per-mod packages: \`valve/addons/amxmodx/\` (base)
   and \`cstrike/\`, \`dod/\`, \`esf/\`, \`ns/\`, \`tfc/\`, \`ts/\` addons trees.
 

@@ -157,12 +157,15 @@ deploy_rcbot() {
     stage_file \
         "$SRC/build_${ARCH}/rcbot_mm_${ARCH}/${RCBOT_ABI}/rcbot_mm_${ARCH}.so" \
         "valve/addons/metamod/dlls/rcbot_mm_${ARCH}.so"
-    # Ship the rcbot config tree if it's there. Don't overwrite
-    # waypoints (per-server tunable).
+    # rcbot's botFolder() defaults to "rcbot" (cwd-relative, resolves to
+    # install root since HLDS chdirs there).  Match upstream's documented
+    # install layout: data tree at install root, NOT under valve/addons/.
+    # See rcbotold/dlls/globals.cpp:126 + rcbot's rcbot_readme.txt.
+    # Don't overwrite waypoints (per-server tunable).
     if [[ -d "$SRC/rcbot" ]]; then
         rsync -a --exclude='waypoints/' "$SRC/rcbot/" \
-            "$(stage_path)/valve/addons/rcbot/"
-        echo "  valve/addons/rcbot/ (config tree)"
+            "$(stage_path)/rcbot/"
+        echo "  rcbot/ (config tree)"
     fi
 }
 
