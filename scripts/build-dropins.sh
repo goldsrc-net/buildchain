@@ -31,11 +31,30 @@ trap 'rm -rf "$TMP_ROOT"' EXIT
 # at the CDN — pin a fresh one per release if you want a newer Steam
 # revision.  Reproduce the URL list locally via
 # `python3 ~/Containers/hlds/steamcdn.py <channel> --role client --platform <p>`.
-# Files to extract are relative to the zip root.
+# Files to extract are relative to the zip root.  Targets land at the
+# dropin install root — `hlds_run` adds `.` to LD_LIBRARY_PATH so the
+# amd64/aarch64 engine resolves them via dlopen("steamclient.so").
+# The Anniversary-HLDS `linux64/` subdir is cargo-cult from Steam-client
+# packaging — nothing in the HLDS binaries actually reads from there.
+#
+# Source channels:
+#   public/client/ubuntu12  -> bins_steamrt_ubuntu12.zip
+#       (steamrt32/{steamclient,libtier0_s,libvstdlib_s}.so for i386,
+#        steamrt64/{...}.so for amd64)
+#   public/client/win64     -> bins_win64.zip
+#       (steamclient.dll/tier0_s.dll/vstdlib_s.dll for i386,
+#        steamclient64.dll/tier0_s64.dll/vstdlib_s64.dll for amd64)
+#   arm64-keyed-beta/client/linuxarm64
+#                           -> bins_linuxarm64_linuxarm64.zip
+#       (steamrtarm64/{steamclient,libtier0_s,libvstdlib_s}.so)
 #
 # arch_key  url  files...
 valve_pins=(
-  "linux-aarch64 https://client-update.steamstatic.com/bins_linuxarm64_linuxarm64.zip.a7395e0a879162bb09ff710dada51e02b24129ee steamrtarm64/steamclient.so steamrtarm64/libtier0_s.so steamrtarm64/libvstdlib_s.so"
+  "linux-i386      https://client-update.steamstatic.com/bins_steamrt_ubuntu12.zip.0cbff6d7d5f9ec9c9e5949678abc34d02d7c9d7d steamrt32/steamclient.so steamrt32/libtier0_s.so steamrt32/libvstdlib_s.so"
+  "linux-amd64     https://client-update.steamstatic.com/bins_steamrt_ubuntu12.zip.0cbff6d7d5f9ec9c9e5949678abc34d02d7c9d7d steamrt64/steamclient.so steamrt64/libtier0_s.so steamrt64/libvstdlib_s.so"
+  "linux-aarch64   https://client-update.steamstatic.com/bins_linuxarm64_linuxarm64.zip.a7395e0a879162bb09ff710dada51e02b24129ee steamrtarm64/steamclient.so steamrtarm64/libtier0_s.so steamrtarm64/libvstdlib_s.so"
+  "windows-i386    https://client-update.steamstatic.com/bins_win64.zip.dc233fe01dc637652736af522c3c88c86442f018 steamclient.dll tier0_s.dll vstdlib_s.dll"
+  "windows-amd64   https://client-update.steamstatic.com/bins_win64.zip.dc233fe01dc637652736af522c3c88c86442f018 steamclient64.dll tier0_s64.dll vstdlib_s64.dll"
 )
 
 # (os, arch, rehlds_libdir, ext, plugins_ini_platform_tag, steam_api_basename)
