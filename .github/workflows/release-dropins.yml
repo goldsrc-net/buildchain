@@ -4,17 +4,17 @@ name: Release drop-ins
 # at the buildchain's currently-pinned SHAs, then attach them to a GitHub
 # release on this repo.
 #
-# Triggered by pushing a tag matching `dropin-v*`, or manually via
+# Triggered by pushing a tag matching `v*`, or manually via
 # workflow_dispatch (supply the tag name).  Tag should point at a commit
 # on `main` whose submodule pins are the ones you want to ship.
 
 on:
   push:
-    tags: ['dropin-v*']
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the release (e.g. dropin-v1.0.0). Must already exist on the repo.'
+        description: 'Tag for the release (e.g. v1.0.0). Must already exist on the repo.'
         required: true
         type: string
 
