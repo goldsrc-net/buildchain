@@ -187,10 +187,18 @@ build-metamod-r-i386:       ; $(call CMAKE_RECIPE,Metamod-R,i386,build-i386,,)
 build-metamod-r-amd64:      ; $(call CMAKE_RECIPE,Metamod-R,amd64,build-amd64,-DBUILD_64BIT=ON,)
 build-metamod-r-aarch64:    ; $(call CMAKE_RECIPE,Metamod-R,aarch64,build-aarch64,-DCMAKE_TOOLCHAIN_FILE=/work/Metamod-R/cmake/toolchain-aarch64-linux.cmake,)
 
-AMXMODX_FLAGS := --metamod=/work/metamod-hl1 --hlsdk=/work/hlsdk --mysql=system
-build-amxmodx-i386:         ; $(call AMBUILD_RECIPE,amxmodx,i386,$(AMXMODX_FLAGS))
-build-amxmodx-amd64:        ; $(call AMBUILD_RECIPE,amxmodx,amd64,$(AMXMODX_FLAGS))
-build-amxmodx-aarch64:      ; $(call AMBUILD_RECIPE,amxmodx,aarch64,$(AMXMODX_FLAGS))
+# --mysql points at a per-arch staging tree pre-installed in the base
+# image: /opt/mariadb-static-<arch>/{include,lib}. lib/ ships only
+# libmysqlclient_r.a (renamed from libmariadbclient.a so amxmodx's
+# vendored mysqlx/AMBuilder finds the upstream-style filename it
+# hardcodes). Static linkage means the produced mysql_amxx_<arch>.so
+# has no libmariadb.so.3 in NEEDED — no apt install libmariadb3
+# required on deploy hosts. See build-containers/debian10.containerfile
+# for the staging layout.
+AMXMODX_BASE_FLAGS := --metamod=/work/metamod-hl1 --hlsdk=/work/hlsdk
+build-amxmodx-i386:         ; $(call AMBUILD_RECIPE,amxmodx,i386,$(AMXMODX_BASE_FLAGS) --mysql=/opt/mariadb-static-i386)
+build-amxmodx-amd64:        ; $(call AMBUILD_RECIPE,amxmodx,amd64,$(AMXMODX_BASE_FLAGS) --mysql=/opt/mariadb-static-amd64)
+build-amxmodx-aarch64:      ; $(call AMBUILD_RECIPE,amxmodx,aarch64,$(AMXMODX_BASE_FLAGS) --mysql=/opt/mariadb-static-aarch64)
 
 HU_TC_I386    := -DCMAKE_TOOLCHAIN_FILE=/work/halflife-updated/cmake/LinuxToolchain.cmake
 HU_TC_AARCH64 := -DCMAKE_TOOLCHAIN_FILE=/work/halflife-updated/cmake/LinuxToolchain-aarch64.cmake
