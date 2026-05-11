@@ -1,0 +1,338 @@
+<html> 
+<head>
+<title>RCBot Files</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head><body>\n");
+
+
+<table border="0" cellspacing="0" cellpadding="0" align="center" width="85%">
+  <tr> 
+    <td colspan="7" height="20"> 
+      <div align="center"><img src="logo.jpg" width="500" height="150" align="absmiddle" /></div>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="7" height="20"> 
+      <h1 align="center">&nbsp;</h1>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="7" height="20">
+      <h1 align="center"><font size="3"><b>~ Frequently Asked Questions ~</b></font></h1>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="7" height="20"> 
+      <blockquote> 
+        <blockquote> 
+          <p><i><font color="#FFFFFF">Last updated : 11th June 2004</font></i> 
+          </p>
+          <p><font face="Tahoma"><a name="top"></a>Questions:</font></p>
+          <h3><font face="Tahoma">How To Install...</font></h3>
+          <p><font face="Tahoma"><a href="install.htm">See the Install Guide</a></font></p>
+          <h3>Install problems...</h3>
+          
+        </blockquote>
+        <ul>
+          <li> <a href="#steamdmc">Q: How do I get RCBot to work on Deathmatch 
+            Classic / Valve Deathmatch on Steam?</a></li>
+          <li><a href="#q1">Q: I type &quot;addbot&quot; in console and it says 
+            unknown command!</a></li>
+          <li><a href="#q16">Q: Alright, I type &quot;rcbot addbot&quot; and it 
+            says &quot;unknown command&quot;</a></li>
+          <li><a href="#q2"> Q: I type &quot;rcbot addbot&quot; and the console 
+            says something about &quot;no profiles are free&quot;</a></li>
+          <li><a href="#q24">Q: I am using steam and steam crashes when starting 
+            a server</a></li>
+          <li><a href="#q25">Q: I am using WON and I get a &quot;Can't getEntityAPI 
+            from server&quot; error</a></li>
+          <li><a href="#q15">Q: I am running Linux, I have installed everything 
+            to the correct folder but when loading the bot it says &quot;Load 
+            Library Failed&quot;</a> 
+            <h3>Squads...</h3>
+          </li>
+          <li><a href="#q3"> Q: How do I make a squad from bots on my team?</a></li>
+          <li><a href="#q4"> Q: No bots will join my squad when I want them to</a></li>
+          <li><a href="#q5">Q: They still won't join my squad even if I am really 
+            close to them!</a></li>
+          <li><a href="#q13">Q: I try to make a squad and enemies join my squad!</a> 
+            <h3>Natural Selection MOD...</h3>
+          </li>
+          <li><a href="#q14">Q: Bots in NS marine team don't build! So they can't 
+            respawn if they die.</a> </li>
+          <li><a href="#q12"> Q: How do I get RCBot and Whichbot (NS Bot : http://www.whichbot.com) 
+            to work together?</a> 
+            <h3>Waypoints &amp; Navigation...</h3>
+          </li>
+          <li><a href="#q17">Q: How do I make my own waypoints?</a></li>
+          <li><a href="#q18">Q: How do I install waypoints I downloaded?</a></li>
+          <li><a href="#q7">Q: The bots always just stand still!</a></li>
+        </ul>
+        <blockquote> 
+          <h3>Administrating...</h3>
+        </blockquote>
+        <ul>
+          <li><a href="#q6">Q: Can you run the bot on a dedicated server?</a></li>
+          <li><a href="#q8">Q: How do I set up my server so I or others can have 
+            access to bot commands?</a> 
+            <h3>Performance...</h3>
+          </li>
+          <li><a href="#q9">Q: The bot uses too much CPU / framerate is low with 
+            bots running.</a> 
+            <h3>MegaHAL...</h3>
+          </li>
+          <li><a href="#q19">Q: How can the bot stop learning from people chatting?</a></li>
+          <li><a href="#q20">Q: Why won't the bots stop talking, they talk too 
+            much?!</a></li>
+          <li><a href="#q21">Q: The bots don't respond to other bots.</a></li>
+          <li><a href="#q22">Q: What are the .brn files in the botprofiles folder?</a></li>
+          <li><a href="#q23">Q: What are the .trn files in the botprofiles folder?</a></li>
+        </ul>
+      </blockquote>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="7" height="20"> 
+      <blockquote> 
+        <blockquote> 
+          <hr />
+          <h2 align="left"><font face="Tahoma">Answers:</font></h2>
+          <h2 align="left"><font face="Tahoma">INSTALL PROBLEMS</font></h2>
+          <p align="left"><a name="steamdmc"></a><b>Q: How do I get RCBot to work 
+            on Deathmatch Classic / Valve Deathmatch on Steam?</b></p>
+          <p align="left"><b>A: Steam has added a new method of loading game dlls 
+            instead of using the liblist.gam file to edit the &quot;gamedll&quot;.</b></p>
+          <p align="left">To do this you must start up the HL.exe for the MOD 
+            you want to use with an extra command line option. Add option -dll 
+            &lt;dll path/file name&gt; to the command line when loading HL, to 
+            make it easier you can create a shortcut with something like this:</p>
+          <p align="left">(standalone install method) :</p>
+          <p align="left">HL.exe -dll ../rcbot/dlls/rcbot.dll</p>
+          <p align="left">or you can have the metamod dll file here if you want 
+            to use metamod and load the rcbot_mm.dll file normally using metamod 
+            install method. i.e. </p>
+          <p align="left">HL.exe -dll addons/metamod/dlls/metamod.dll</p>
+          <p align="left"><a href="http://www.rcbot.net/forums/index.php?showtopic=251" target="_blank">see 
+            this thread for more info!</a></p>
+          <p><a name="q1"></a><b>Q: I type &quot;addbot&quot; in console and it 
+            says &quot;unknown command&quot;!</b></p>
+          <p>A: type &quot;rcbot addbot&quot; !!!<a href="#top">&lt;back to top&gt; 
+            </a></p>
+          <p><b><a name="q16"></a>Q: Alright, I type &quot;rcbot addbot&quot; 
+            and it still says &quot;unknown command&quot;</b></p>
+          <p>A: This could be of a few reasons:</p>
+          <p>1. There are two gamedll lines or two gamedll_linux lines that are 
+            uncommented in the liblist.gam file for the MOD you want to use. You 
+            should only ever have ONE of each of these lines.<br />
+            2. If using metamod, the bot may be installed in the wrong folder 
+            or you have entered the path wrong in metamod's plugins.ini file.</p>
+          <p>1 : If using the stand alone dll (without metamod) open the liblist.gam 
+            and remove any other lines that start with &quot;gamedll&quot; other 
+            than the line which gives the bot dll.</p>
+          <p>2 : If using metamod, type &quot;meta list&quot; in the console. 
+            If it shows rcbot_mm...dll/so status is 'badf' it means the file could 
+            not be found (meaning the path written in metamod's plugin.ini file 
+            is wrong). If it isn't shown at all then you haven't wrote the bot 
+            dll path into metamod's plugins.ini file and still need to do it. 
+            Some people have found that changing the '/' folder characters in 
+            the rcbot path in metamod's plugin file to windows folder character 
+            (backslash : '\') will work.<a href="#top">&lt;back to top&gt; </a></p>
+        </blockquote>
+        <blockquote> 
+          <p><a name="q2"></a><b>Q: I type &quot;rcbot addbot&quot; and the console 
+            says something about &quot;no profiles are free&quot;</b></p>
+          <p>A: Bots have their own profiles stored as files in the botprofiles 
+            folder. Also the file called bot_profiles.ini must have numbers in 
+            them (each line is a valid profile number).</p>
+          <p> The most common situation is that you simply have not installed 
+            rcbot to the correct folder. RCBot must be installed ABOVE the mod 
+            folder (that's the same folder where the MOD folder is, NOT inside 
+            the MOD folder!)</p>
+          <p> In STEAM, and if running mods such as deathmatch classic where the 
+            mod is in its own folder (i.e. not inside half-life steam app folder), 
+            you must make another copy of the bot folder and put it in the &quot;steamapps/&lt;email&gt;&quot; 
+            folder too.</p>
+          <p> So you may get this error if:</p>
+          <p> - you haven't installed the bot to the correct folder<br>
+            - there are no profiles in the botprofiles folder / the botprofiles 
+            folder doesn't exist<br>
+            - there are no lines in the bot_profiles.ini file (which denote valid 
+            bot profiles)<a href="#top">&lt;back to top&gt; </a></p>
+          <p><b><a name="q15"></a>Q: I am running Linux, I have installed everything 
+            to the correct folder but when loading the bot it says &quot;Load 
+            Library Failed&quot;</b></p>
+          <p>First of all this could be because the bot is again not installed 
+            into the correct folder, or the gamedll_linux line in liblist.gam 
+            is pointing to the wrong .so file or the path is written incorrectly.</p>
+          <p>If the installation folder and liblist.gam seem fine then you may 
+            need to download the GNU C++ Libraries for backward compatability. 
+            The bot is compiled on gcc on mandrake 8.2 (don't know what gcc version 
+            it is to be honest!) and may need the libraries to link the dll file 
+            with metamod etc. Download the libraries for your linux distribution.<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2>SQUADS</h2>
+          <p><a name="q3"></a><b>Q: How do I make a squad from bots on my team?</b><br>
+          </p>
+          <p>A: Use the squad menu (&quot;rcbot squad_menu&quot;), you can bind 
+            a key to it and then select<br>
+            &quot;more options&quot; and then &quot;make squad&quot;. Alternatively 
+            you can say &quot;form up&quot; in a team<br>
+            message.<a href="#top">&lt;back to top&gt; </a></p>
+          <p><a name="q4"></a><b>Q: No bots will join my squad when I want them 
+            to</b><br>
+          </p>
+          <p>A: You must be nearby bots to be able to make a squad from them<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <p><a name="q5"></a><b>Q: They still won't join my squad even if I am 
+            really close to them!</b><br>
+          </p>
+          <p>A: Probably the bots have got a squad already of their own. You can 
+            remove the squads made by bots (or being lead by bots) by using the 
+            squad menu. Choose the &quot;more options&quot; item in the squad 
+            menu and then &quot;remove all bot squads&quot; Then try making a 
+            squad again.<a href="#top">&lt;back to top&gt; </a></p>
+          <p><b><a name="q13"></a>Q: I try to make a squad and enemies join my 
+            squad!</b><br />
+          </p>
+          <p>A: If you have godmode or notarget mode on then enemies might join 
+            your squad because the enemy check will return false.<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2>NATURAL SELECTION MOD</h2>
+          <p><b><a name="q14"></a>Q: Bots in NS marine team don't build! So they 
+            can't respawn if they die.</b><br>
+          </p>
+          <p>A: Try using the 'rcbot config marine_auto_build' command. It will 
+            create an infantry portal near the command console provided there 
+            are waypoints on the map.<a href="#top">&lt;back to top&gt; </a></p>
+          <p><a name="q12"></a><b>Q: How do I get RCBot and Whichbot (NS Bot : 
+            http://www.whichbot.com) to work together?</b></p>
+          <p>i. Download latest RCBot and whichbot<br>
+            ii. Extract the bots to their locations<br>
+            iii. Get the latest metamod dll file from http://www.metamod.org<br>
+            iv. Extract metamod dll into ns/addons/metamod/dlls and overwrite 
+            the old file.<br>
+            v. Edit the metamod plugins.ini file and make sure these lines are 
+            in the file:</p>
+          <p>win32 addons/whichbot/dlls/whichbot.dll<br>
+            win32 ../rcbot/dlls/rcbot_mm.dll</p>
+          <p>Similarly for linux, edit the plugins.ini file to point to the metamod 
+            linux dll files instead. (see metamod documentation if unsure) <a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2>ADMINISTRATING</h2>
+          <p><a name="q6"></a><b>Q: Can you run the bot on a dedicated server?</b></p>
+          <p>A: The bot should run fine on a dedicated server, you can access<br>
+            the commands by using the same as the client (i.e. to add a bot use<br>
+            the command &quot;rcbot addbot&quot;)<a href="#top">&lt;back to top&gt; 
+            </a></p>
+          <p><a name="q7"></a><b>Q: The bots always just stand still!</b></p>
+          <p>A: The map must have waypoints, you can make your own or look for 
+            some on my waypoints page on the bot site or the bot forum. If it 
+            does have waypoints type &quot;rcbot debug nav 1&quot; and it will 
+            write in the console what the bots are trying to do, perhaps there 
+            are problems with the waypoint paths etc, or there is a bug you must 
+            sort out.<a href="#top">&lt;back to top&gt; </a></p>
+          <p><a name="q8"></a><b>Q: How do I set up my server so I or others can 
+            have access to bot commands?</b></p>
+          <p>A: The procedure has changed a lot since last RCBot because of the 
+            introduction of steam. Read the &quot;Admin Use&quot; section in the 
+            rcbot readme and also the bot_users.ini file (<i>open with notepad</i>) 
+            and read the comments on how to add a user. Note that the test in 
+            the bot_users.ini file is <i>case-sensitive</i>! <a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2>PERFORMANCE</h2>
+          <p><a name="q9"></a><b>Q: The bot uses too much CPU / framerate is low 
+            with bots running.<br>
+            </b></p>
+          <p>A: Change some of the performance settings, these are typical bot 
+            commands. They are:</p>
+          <p> rcbot config max_path_revs<br>
+            rcbot config update_vision_time<br>
+            rcbot config max_update_vision_revs</p>
+          <p> See the bot_commands.txt file for more information on these commands.<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2>WAYPOINTS &amp; NAVIGATION</h2>
+          <p><a name="q10"></a><b>Q: What are the .rcw files in Waypoints folder?</b></p>
+          <p>A: These are the waypoints for the maps, each waypoint is in a folder 
+            corresponding to the MOD it is for also.<a href="#top">&lt;back to 
+            top&gt; </a></p>
+          <p><a name="q11"></a><b>Q: What are the .rcv files in the Waypoints 
+            folder?</b></p>
+          <p>A: These are the waypoint visibility files, they store info on each 
+            waypoint if a waypoint is visible from another to work out best cover 
+            places etc.<a href="#top">&lt;back to top&gt; </a></p>
+          <p><b><a name="q17"></a>Q: How do I make my own waypoints?</b></p>
+          <p>See the waypoint readme that you get with the bot!<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <p><b><a name="q18"></a>Q: How do I install waypoints I downloaded?</b></p>
+          <p>i. If you downloaded a &quot;.zip&quot; file open the zip file with 
+            winzip or other zip compressor utility and extract the .rcw file into 
+          </p>
+          <p>&lt;HALF LIFE FOLDER&gt;/rcbot/waypoints/&lt;MOD FOLDER NAME&gt;/</p>
+          <p>ii. If you downloaded an &quot;.rcw&quot; file then save it to the 
+            same folder above</p>
+          <p></p>
+          <p>-: Replace &lt;HALF LIFE FOLDER&gt; to the folder where your half-life 
+            hl.exe is stored.<br>
+            -: Replace &lt;MOD FOLDER NAME&gt; with the name of the MOD's folder 
+            that the MOD is used in.</p>
+          <p><br>
+            -: Delete the .rcv file that has the same name as the map that the 
+            waypoints are for to save possible crashing and bad performance.<a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <h2><font face="Tahoma">MEGAHAL (Bot chatting)</font></h2>
+          <p><a href="#q19"><b><a name="q19"></a></b></a><b>Q: How can the bot 
+            stop learning from people chatting?</b></p>
+          <p>If you want bots to stop learning the language people are speaking 
+            altogether (for reasons such as that your megaHal brain .brn files 
+            are becoming huge) you can disable bots learning by using the config 
+            command &quot;rcbot config chat_dont_learn 1&quot;. <a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <p><a href="#q20"><b><a name="q20"></a></b></a><b>Q: Why won't the bots 
+            stop talking, they talk too much?!</b></p>
+          <p>You will need to put the reply percentage down. Use the config variable 
+            &quot;rcbot config chat_reply_percent&quot; and enter then percentage 
+            of time you want them to reply to messages. Plus you may have bots 
+            responding to other bots that will cause a lot of messages. If real 
+            mode is not on, then the bots will also chat more as the bots reputation 
+            with the player that it is responding to does not have affect. <a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <p><a href="#q21"><b><a name="q21"></a></b></a><b>Q: The bots don't 
+            respond to other bots.</b></p>
+          <p>You will need to change the config variable &quot;rcbot config chat_reply_to_bots&quot; 
+            to 1, that's &quot;rcbot config chat_reply_to_bots 1&quot;. <a href="#top">&lt;back 
+            to top&gt; </a></p>
+          <p><a name="q22"></a><b>Q: What are the .brn files in the botprofiles 
+            folder?</b></p>
+          <p>The .brn files keep the bots megaHAL brain, so that it can read it 
+            again when the bots re-joins the server. It stores what it has learned 
+            from humans talking in the server while the bot was also in the server.<a href="#top"> 
+            &lt;back to top&gt; </a></p>
+          <p><b><a name="q23"></a>Q: What are the .trn files in the botprofiles 
+            folder?</b></p>
+          <p>The .trn files are training files for the bot. Each bot profile can 
+            specify a certain .trn file for it to train the megaHAL brain if none 
+            exists so that it has something it can say without needing bots to 
+            see humans say messages. If no .trn file is specified in the botprofile 
+            then it will load it's own if it exists. <i>See the botprofile readme 
+            for info</i>.<a href="#top"> &lt;back to top&gt; </a></p>
+          <p><b><a name="q24"></a>Q:<a href="l"> </a>I am using steam and steam 
+            crashes when starting a server</b></p>
+          <p>Steam crashes if it can't find the DLL File to play the game (Yes 
+            good old steam) whereas WON didnt use to. HL Can't find the rcbot 
+            DLL so <b>you haven't installed rcbot to the correct folder</b> or 
+            made a mistake when entering the bot DLL file 's location in either<strong> 
+            liblist.gam</strong> or <strong>metamods plugins.ini</strong></p>
+          <p><b><a name="q25"></a>Q: I am using WON and I get a &quot;Can't getEntityAPI 
+            from server&quot; error</b></p>
+          <p>HL Can't find the rcbot DLL so <b>you haven't installed rcbot to 
+            the correct folder</b> or made a mistake when entering the bot DLL 
+            file 's location in either<strong> liblist.gam</strong> or <strong>metamods 
+            plugins.ini</strong></p>
+          </blockquote>
+      </blockquote>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

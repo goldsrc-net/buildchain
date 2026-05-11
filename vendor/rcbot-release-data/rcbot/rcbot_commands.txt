@@ -1,0 +1,406 @@
+Commands consist of categories below:
+
+- Squad
+- Config
+- Admin
+- Debug
+- Bot
+- Waypoint
+- Util
+
+----------------------------------------------
+Categories:
+
+==============================================
+=--------------------------------------------=
+"SQUAD" commands ("rcbot squad ...")
+=--------------------------------------------=
+==============================================
+
+"rcbot squad formation <string argument>"
+
+the string argument can be a string of as follows:
+
+"echleft"   (Echelon left formation)
+"echright"  (Echelon Right formation)
+"wedge"     (Wedge formation)
+"vee"       (Vee formation)
+"line"      (Line formation)
+"column"    (Column formation)
+
+=--------------------------------------------=
+
+"rcbot squad spread <floating point number argument>"
+
+The floating point nu,ber argument is a real number
+which denoted the distance between each squad member.
+
+=--------------------------------------------=
+Squad Menu
+=--------------------------------------------=
+
+"rcbot squad_menu"
+
+Opens the squad menu to alter your squad.
+
+==============================================
+=--------------------------------------------=
+"CONFIG" commands ("rcbot config ...")
+=--------------------------------------------=
+=-------------------------------------------=
+"rcbot config <config type> <argument>"
+
+<config type> are any of these below (i.e. commanding, 
+dont_shoot etc.)
+===========================================================
+"rcbot config tooltips <boolean>"
+
+turn tooltips (help messages) on or off by settin it to 1 for on
+and 0 for off
+===========================================================
+"rcbot config wall_stick_tolerance <floating point>"
+
+makes skulks face the wall more if the value is larger. This value
+allows skulks to wall climb better.
+===========================================================
+"rcbot config chat_dont_learn <boolean arg (1 or 0)>"
+
+if set to 1 then bots won't leanr humans messages anymore, this means that
+the .brn files in the botprofiles folder won't get any bigger.
+
+so this is useful if the .brn files are getting very large.
+===========================================================
+"rcbot config balance_teams <boolean>"
+
+if set to 1 the bots will try to join another team if they can't
+join the team they want to join.
+
+===========================================================
+"rcbot config marine_auto_build <boolean>". 
+
+If set to 1, an infantry portal will automatically be built nearby 
+the command console when a bot joins the server.
+
+Waypoints need to be on the map for this to find a position for
+the infantry portal.
+===========================================================
+"rcbot config reserve_bot_slots <boolean>"
+
+If set to 1, and if "min bots" is set then upon map change
+bots will not join until after a few seconds, if a client
+attempts to join before this and the number of bots
+will be less than "min bots" when the server gets full because
+of this client joining, it will kick the client, disallowing the client
+to join the server.
+
+===========================================================
+"rcbot config chat_percent <integer arg (0 - 100)>"
+
+This command affects the bot chat stored in bot_chat.ini
+The bot will chat less if this is low, more if it is high.
+
+===========================================================
+"rcbot config chat_reply_to_bots" <boolean argument>
+
+if set to 1 then bots will reply to other bots in bot chat.
+
+===========================================================
+"rcbot config chat_reply_percent <integer arg (0 - 100)>"
+
+This command affects the rate at which bots will reply to
+messages using megaHAL.
+
+The bot will chat less if this is low, more if it is high.
+
+===========================================================
+"rcbot config bot_stuck_speed <integer arg (0 - 100)>"
+
+The bots will reply to messages using megaHAL more if this
+value is increased.
+
+===========================================================
+"rcbot config bot_stuck_speed <floating point arg (speed)>"
+
+This command is the speed of which a bot will wait until it kills itself 
+if really stuck (determined by its speed), they must be going faster than this
+speed for a small amount of time so that they dont suicide.
+
+If you make it too high they might kill theirselves too much.
+The default is 7. Make it negative (e.g. -1) to disallow it. 
+
+=====================================================================
+
+"rcbot config update_vision_time <floating point argument (in time)>"
+
+This command is the amount of time between each visibility check that a bot makes.
+Larger values mean better performance but slakier bots (they think they can still see things.. but they can't really...) This also depends on the max_update_vision_revs command, see below.
+
+I recommend this value to be around 0.04 to about 0.10, you should change it depending on how many bots are running if the game slows down.
+
+=============================================== 
+
+"rcbot config max_update_vision_revs <integer>"
+
+This command tells the bot how many times it should search it's visibility every 0.04 or the "update_vision_time" command in seconds.
+
+Higher values mean the bot will eat more CPU power, lower values are better for lower CPU for higher performance. I recommend about 100 to about 200.
+
+===============================================
+
+"rcbot config max_path_revs <integer>"
+
+This command tells the bot how many times to loop through the pathfinding
+algorithm each time they enter it (every 0.04 seconds)
+
+The lower the value, the better CPU performance, but takes bots longer to find
+their path (i.e. they will just stand still until they find it)
+
+The higher the value, more CPU is used and the bot may find its path quicker.
+
+I recommened to keep it quite low however, about 300 (default is 300) you can
+alter it in the game or in the bot_config.ini file.
+
+=-------------------------------------------=
+"rcbot config update_ladder_time <float value>"
+
+input a floating point (real number) value
+
+-1.0 means that the bot will not update ladder angles so that they
+     will not jerk around on the ladders all the time.
+
+0.0  means that they will always face towards the next waypoint but
+     will tend to jerk around a lot becuase their angles are changing
+     very quickly
+
+any other number means they will update their ladder angles every x seconds, where x
+is the value you enter.
+
+=-------------------------------------------=
+"rcbot config gorge_amount <float value>"
+
+Sets the ratio for the amount of the team to go 
+gorge, default is 0.4
+
+=-------------------------------------------=
+"rcbot config commanding"
+
+(NOT AVAILABLE YET!)
+Used in NS: Marines try to use command chair
+=-------------------------------------------=
+"rcbot config wait_for_orders"
+
+Used in NS: Marines wait for orders from the commander
+=-------------------------------------------=
+"rcbot config dont_shoot"
+
+Bots don't look for enemies
+=-------------------------------------------=
+"rcbot config chatting"
+
+Set to 1 to allow bot talking/chatting. 0 to disable.
+=-------------------------------------------=
+"rcbot config real_mode"
+
+(NOT AVAILABLE YET!)
+Bots will join/leave game as they please.
+=-------------------------------------------=
+"rcbot config max_bots"
+
+Set to -1 to disable auto-bot adding/removing.
+If max bots is set to 8, for example then bots
+will keep getting added until the amount of bots 
+reach 8.
+
+=-------------------------------------------=
+"rcbot config min_bots"
+
+Set to -1 to disable auto-bot adding/removing 
+with min_bots. If min_bots is 4 it will add 4 
+bots automatically. If a player trys to join when
+a server is full and number of bots = min_bots
+then the player can't join. But if the number
+of bots is more than min_bots then a bot will
+be kicked so that the player can join.
+
+==============================================
+=--------------------------------------------=
+ADMIN commands
+=--------------------------------------------=
+==============================================
+"rcbot set_pass <password>"
+
+Sets your pass word to <password> for accessing bot commands
+you must have the same name and password as in the bot_users.ini
+file to have access to bot commands from another server/dedicated server
+on the client.
+
+==============================================
+=--------------------------------------------=
+DEBUG commands
+=--------------------------------------------=
+==============================================
+
+rcbot debug <debug type> <1 (on)/0 (off)>
+
+Debug types are:
+"touch"
+"think"
+"hear"
+"message"
+"block"
+"move"
+"aim"
+"nav"
+"see"
+
+Views debug info about the debug type if the debug
+info level is set at 1.
+
+=--------------------------------------------=
+"BOT" commands
+----------------------------------------------
+rcbot addbot
+
+Adds a random bot from a bot profile, bot profiles
+must exist so you can add bots.
+
+=--------------------------------------------=
+"WAYPOINT" commands
+----------------------------------------------
+rcbot waypoint_menu
+
+Displays the waypoint menu.
+
+----------------------------------------------
+rcbot waypoint on
+
+Displays waypoints in the game
+
+----------------------------------------------
+rcbot waypoint off
+
+Puts waypoint display off.
+
+----------------------------------------------
+rcbot waypoint add
+
+Adds a waypoint at current position
+
+----------------------------------------------
+rcbot waypoint delete
+
+Deletes a waypoint at current position
+
+----------------------------------------------
+rcbot pathwaypoint on
+
+Displays path connections to waypoints in-game
+
+----------------------------------------------
+rcbot pathwaypoint off
+
+Puts path connection to waypoints display off
+
+----------------------------------------------
+rcbot pathwaypoint enable
+
+Enables paths to be automatically created when
+a waypoint is added.
+
+----------------------------------------------
+rcbot pathwaypoint disable
+
+Disables paths to be automatically added when a 
+waypoint is added
+
+----------------------------------------------
+
+rcbot pathwaypoint create1
+
+Stores first waypoint to make a new path 
+connection 
+
+----------------------------------------------
+rcbot pathwaypoint create2
+
+Makes the new path connection from the waypoint
+stored from 'pathwaypoint create1' command
+
+----------------------------------------------
+rcbot pathwaypoint remove1
+
+Stores first waypoint to remove path from
+this waypoint.
+
+----------------------------------------------
+rcbot pathwaypoint remove2
+
+Removes the path connection from the waypoint
+stored from 'pathwaypoint remove1' command.
+
+==============================================
+=--------------------------------------------=
+"UTIL" Commands
+----------------------------------------------
+==============================================
+
+rcbot util send_sound <sound path & name>
+
+plays the sound to everyone provided they also have the
+sound (to avoid sfx_t errors & having to precache them)
+
+e.g. "rcbot util send_sound scientist/checkatten" :)
+
+--------------------------------------------
+rcbot util teleport <player name>
+
+teleports the player with <player name> to the teleport position
+set by the set_teleport command.
+
+--------------------------------------------
+rcbot util set_teleport
+
+sets the position where you are standing the new teleport position
+
+--------------------------------------------
+rcbot util search (<distance>)
+
+Lists the entities within distance in console
+
+If distance is not given then the deault 
+distance is 100.
+
+--------------------------------------
+rcbot util notouch
+
+You won't be able to use teleports/pickup weapons with this
+on. This is useful for making teleport waypoints etc.
+
+--------------------------------------
+rcbot util noclip_mode (<player name>)
+
+Puts no-clip onto the player with player_name
+If player_name is not given then you are given
+no-clip mode.
+
+-------------------------------------
+rcbot util godmode (<player name>)
+
+Puts god-mode onto the player with player_name
+If player_name is not given then you are given
+god-mode.
+
+-------------------------------------
+rcbot util notarget_mode (<player name>)
+
+Puts notarget-mode onto the player with player_name
+If player_name is not given then you are given
+notarget-mode.
+
+When no target mode is on, the player will not be shot
+at by monsters, this is useful if you are waypointing.
+
+-------------------------------------
+rcbot util killbot <bot name>
+
+Kills the bot with the name of <bot name>

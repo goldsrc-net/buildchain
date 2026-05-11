@@ -1,0 +1,20 @@
+# this file contains words the HAL brain of the bot will change to another one
+# when chosen as keywords
+# NOTE: you MUST seperate the words on the same line by a TAB
+YOU ARE	I AM
+YOU'RE	I AM
+YOUR	MY
+YOU	I
+WHY	BECAUSE
+ARE	AM
+IS THAT	THAT IS
+THAT	WHAT
+WHY IS	BECAUSE
+THAT IS	IT IS
+IS IT	IT IS
+WHAT IS	IT IS
+#and the other way round [leave out just now]
+#MY	YOUR
+#I	YOU
+#AM	ARE
+#I AM	YOU'RE

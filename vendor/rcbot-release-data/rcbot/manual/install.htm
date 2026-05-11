@@ -1,0 +1,158 @@
+<html> 
+<head>
+<title>Rcbot manual</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body bgcolor="#000000" text="#FFFFFF" link="#FF0000">
+<div align="center"> 
+  <p><img src="logo.jpg" width="500" height="150" /> </p>
+  <h1><font color="#FF0000" face="Tahoma">Install</font></h1>
+</div>
+<blockquote> 
+  <div align="center"> 
+    <p align="left"><a href="manual.htm">Back To Main Menu</a></p>
+    <h2 align="left"><font size="+1">Installing RCBot</font></h2>
+  </div>
+  <blockquote> 
+    <div align="left"> 
+      <h3 align="left">Extracting Files</h3>
+      <p align="left">You must first extract the RCBot files from the zip file 
+        into the Half-life folder. To do this you need winzip (http://www.winzip.com) 
+        or if you are using windows XP you can use the integrated zip file extraction.</p>
+      <p align="left">You need to extract the zip file to the <strong>half-life</strong> 
+        folder (or more precisely, the same folder where the MOD folder also resides 
+        in)</p>
+      <p align="left">Example:</p>
+    </div>
+    <blockquote>
+      <div align="left">
+        <p>If half-life is installed to C:\Sierra\Half-life then extract it to 
+          C:\Sierra\Half-life</p>
+      </div>
+      <div align="left">
+        <p>If you are using Steam, then extract to C:\Program Files\Steam\SteamApps\&lt;email&gt;\half-life</p>
+      </div>
+      <div align="left">
+        <p>If you want to install the bot to Deathmatch Classic or other Steam 
+          Provided MOD see the <a href="faq.htm">FAQ</a></p>
+      </div>
+    </blockquote>
+    <div align="left">
+      <p align="left">Now that the files are extracted we need to set-up the MOD 
+        to read the rcbot files.</p>
+    </div>
+  </blockquote>
+  <div align="center"> 
+    <h2 align="left"><font size="+1">Installing using StandAlone</font></h2>
+  </div>
+  <blockquote> 
+    <div align="left"> 
+      <h3 align="left"> What is the Standalone DLL for?</h3>
+      <p align="left">The standalone DLL is used if you do not want to use Metamod 
+        (see metamod below to see what metamod is all about).</p>
+      <h2 align="left">How to Install</h2>
+      <blockquote>
+        <div align="left">
+          <p>Each MOD comes with a file called &quot;liblist.gam&quot; in it's 
+            folder. This file tells Half-life about the MOD and what DLL files 
+            it uses. We are only interested in what DLL files the MOD will use 
+            to install.</p>
+        </div>
+      </blockquote>
+      <ol>
+        <li> 
+          <div align="left">Open the desired liblist.gam file in <strong>notepad</strong> 
+            or a simple text editing program</div>
+        </li>
+        <li>Scroll down to where a line says either...<br>
+          <br>
+          &quot;<strong>gamedll</strong>&quot; OR &quot;<strong>gamedll_linux</strong>&quot;</li>
+        <li>If you are using Windows then we are only interested in the <strong>gamedll</strong> 
+          line </li>
+        <li>If you are using Linux then we are only interest in the <strong>gamedll_linux</strong> 
+          line </li>
+        <li>First comment out the current line by adding two slashes, i.e. &quot;//&quot; 
+          in fron t of the line, meaning Half-life will not read this line anymore 
+          and you can still read it incase you want to change the old line back.</li>
+        <li>Add a new line with the same &quot;gamedll&quot; as you want i.e. 
+          either gamedll or gamedll_linux (windows or linux)</li>
+        <li>On the right of the gamedll text seperated by a space is the DLL file 
+          we want.</li>
+        <li>If you are using Windows, change this to &quot;..\rcbot\dlls\rcbot.dll&quot;</li>
+        <li>If you are using Linux, change this to &quot;../rcbot/dlls/rcbot_i486.so&quot;</li>
+      </ol>
+    </div>
+  </blockquote>
+  <div align="center"> 
+    <h2 align="left"><font size="+1" face="Tahoma">Installing using Metamod</font></h2>
+  </div>
+  <blockquote> 
+    <div align="left"> 
+      <h3 align="left">What is the Metamod DLL for?</h3>
+      <p align="left">The Metamod DLL is for metamod to read the DLL file so it 
+        can run as a plugin.</p>
+      <h3 align="left">What is Metamod?</h3>
+      <p align="left">Metamod is just another DLL file which when hooked up to 
+        the Half-life MOD can run many plugins (or DLL files) at once. For example 
+        you can easily allow two different bots to run (e.g. RCbot and Whichbot) 
+        at the same time.</p>
+      <h3 align="left">Installing to Metamod</h3>
+      <p align="left">Before you start make sure you have metamod &quot;installed&quot;. 
+        All you need is to have a folder called &quot;addons&quot; in your MOD 
+        directory and a folder in there called &quot;Metamod&quot;. In the Metamod 
+        folder, it should have a file called &quot;plugins.ini&quot; and another 
+        folder called &quot;dlls&quot; which stores the Metamod DLL file. We do 
+        not need to worry about the metamod DLL file or it's location unless you 
+        have not installed metamod properly.</p>
+      <p align="left">You must have metamod installed first. If you do not have 
+        it you need to download the latest Metamod from <a href="http://www.metamod.org">http://www.metamod.org</a> 
+      </p>
+    </div>
+    <blockquote> 
+      <div align="left"> 
+        <h4>Installing metamod</h4>
+        <p>Each MOD comes with a file called &quot;liblist.gam&quot; in it's folder. 
+          This file tells Half-life about the MOD and what DLL files it uses. 
+          We are only interested in what DLL files the MOD will use to install.</p>
+      </div>
+    </blockquote>
+    <ol>
+      <li> 
+        <div align="left">Open the desired liblist.gam file in <strong>notepad</strong> 
+          or a simple text editing program</div>
+      </li>
+      <li>Scroll down to where a line says either...<br>
+        <br>
+        &quot;<strong>gamedll</strong>&quot; OR &quot;<strong>gamedll_linux</strong>&quot;</li>
+      <li>If you are using Windows then we are only interested in the <strong>gamedll</strong> 
+        line </li>
+      <li>If you are using Linux then we are only interest in the <strong>gamedll_linux</strong> 
+        line </li>
+      <li>First comment out the current line by adding two slashes, i.e. &quot;//&quot; 
+        in fron t of the line, meaning Half-life will not read this line anymore 
+        and you can still read it incase you want to change the old line back.</li>
+      <li>Add a new line with the same &quot;gamedll&quot; as you want i.e. either 
+        gamedll or gamedll_linux (windows or linux)</li>
+      <li>On the right of the gamedll text seperated by a space is the DLL file 
+        we want.</li>
+      <li>If you are using Windows, change this to &quot;addons\metamod\dlls\metamod.dll&quot;</li>
+      <li>If you are using Linux, change this to &quot;addons/metamod/dlls/metamod_i386.so&quot;</li>
+    </ol>
+    <div align="left"> 
+      <p align="left">Now, Metamod has a file called &quot;plugins.ini&quot; in 
+        the addons/metamod folder. We need to open this in <strong>notepad</strong> 
+        or a simple text editing program. Metamod needs to know the DLL files 
+        (or SO files for linux) of the plugins it wants to use, and the operating 
+        system required for each file.</p>
+      <p align="left">If you are using the Rcbot Windows metamod file then you 
+        need to add this line to plugins.ini...</p>
+      <p align="left">win32 ../rcbot/dlls/rcbot_mm.dll</p>
+      <p align="left">If you are using the Rcbot Linux metamod file then you need 
+        to add this line to plugins.ini...</p>
+      <p align="left">linux ../rcbot/dlls/rcbot_mm_i486.so</p>
+    </div>
+  </blockquote>
+</blockquote>
+</body>
+</html>

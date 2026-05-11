@@ -368,6 +368,23 @@ lets you grab exactly what your install needs (e.g. just
 `rehlds-linux-aarch64.zip` + `metamod-r-linux-aarch64.zip` for a
 plain ReHLDS arm64 server) without unpacking a megazip.
 
+### Vendored upstream rcbot release-data
+
+`vendor/rcbot-release-data/` holds a non-binary snapshot of
+[`APGRoboCop/rcbotold`](https://github.com/APGRoboCop/rcbotold)'s
+release-zip data tree (waypoints, visibility files, map_configs,
+botprofiles, manual, configs).  Upstream's maintainer assembles those
+files by hand at release time — they don't live in any branch of the
+source repo, so no per-consumer CI fix could fill the gap.  The
+fetch-release-artifacts.sh script overlays this tree onto every
+`rcbotold-<arch>.zip` it produces, so each per-arch release ships the
+full upstream data tree plus our cross-arch binary.
+
+Refresh by re-extracting upstream's latest `rcbot<version>.zip` over
+`vendor/rcbot-release-data/`, deleting the `.so` / `.dll` files
+(those are upstream's i386-only pre-built binaries; we ship our own
+per-arch), and committing the diff.
+
 ## License
 
 Buildchain itself: MIT. Each consumer project retains its own license

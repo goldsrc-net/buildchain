@@ -1,0 +1,88 @@
+<html> 
+<head>
+<title>Rcbot manual</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<script language="JavaScript">
+function calculate()
+{
+	var total = 0;
+	
+	if ( document.calcform.check1.checked )
+		total += parseInt(document.calcform.check1.value);
+	if ( document.calcform.check2.checked )
+		total += parseInt(document.calcform.check2.value);
+	if ( document.calcform.check3.checked )
+		total += parseInt(document.calcform.check3.value);
+	if ( document.calcform.check4.checked )
+		total += parseInt(document.calcform.check4.value);
+	if ( document.calcform.check5.checked )
+		total += parseInt(document.calcform.check5.value);						
+		
+	document.calcform.accesslev.value = total;
+}
+</script>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FF0000">
+<div align="center"> 
+  <p><img src="logo.jpg" width="500" height="150" /> </p>
+  <h1><font color="#FF0000" face="Tahoma">Administrating a Server</font></h1>
+</div>
+<blockquote> 
+  <div align="center"> 
+    <p align="left"><a href="manual.htm">Back To Main Menu</a></p>
+    <h2 align="left"><font size="+1">Access Levels</font></h2>
+  </div>
+  <blockquote> 
+    <div align="left"> 
+      <h3 align="left">Access Level Calculator</h3>
+      <p align="left">To give each user access to bot commands you must give them 
+        an access level in the bot_users.ini</p>
+      <p align="left">Use this form to get the access level you want for a user. 
+      </p>
+      <p align="left">Tick each box that applies if you want to give the user 
+        access to the corresponding actions...</p>
+      <form action="javascript:calculate()" method="post" name="calcform" id="calcform">
+        <table width="450" border="0" align="center">
+          <tr> 
+            <td width="4%"><input name="check1" type="checkbox" id="check1" value="1"></td>
+            <td width="96%">Waypoint Commands</td>
+          </tr>
+          <tr> 
+            <td><input name="check2" type="checkbox" id="check2" value="2"></td>
+            <td>Add and Remove Bots</td>
+          </tr>
+          <tr> 
+            <td><input name="check3" type="checkbox" id="check3" value="4"></td>
+            <td>Util Commands</td>
+          </tr>
+          <tr> 
+            <td><input name="check4" type="checkbox" id="check4" value="8"></td>
+            <td>Configuration Commands</td>
+          </tr>
+          <tr> 
+            <td><input name="check5" type="checkbox" id="check5" value="16"></td>
+            <td>Debug Command</td>
+          </tr>
+          <tr> 
+            <td colspan="2"><input name="calcbutton" type="submit" id="calcbutton" value="Calculate">
+              <input type="reset" name="Reset" value="Clear"></td>
+          </tr>
+          <tr>
+            <td colspan="2"><font size="2">Access Level : </font>
+<input name="accesslev" type="text" id="accesslev" value="0" size="4" maxlength="4">
+              (Copy and paste into bot_users.ini for the user's access level)</td>
+          </tr>
+        </table>
+      </form>
+      <p align="left">&nbsp;</p>
+    </div>
+  </blockquote>
+  <blockquote>
+    <div align="left"></div>
+  </blockquote>
+</blockquote>
+</body>
+</html>

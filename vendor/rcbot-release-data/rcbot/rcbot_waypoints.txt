@@ -1,0 +1,386 @@
+RCBOT WAYPOINTS txt
+-------------------
+
+BY Cheeseh cheeseh(at)rcbot(dot)net
+
+I recommend reading the waypoint tips, even if you are familiar with
+waypointing!
+
+1. Waypoints, What Are They?
+2. Waypoint Commands
+3. Making Waypoints
+4. Waypoint Tips
+5. Waypoint Types
+6. Waypoint Menu
+
+=-------------------=
+1. Waypoints, What are they?
+=-------------------=
+
+i.   Waypoints are points in a map that the bots can walk to.
+ii.  Waypoints have paths to other waypoints if they can go through
+     those paths.
+iii. Waypoints can have different types, e.g. Jump waypoints, Crouch waypoints.
+iv.  When displayed on the map they look like small lines of lightning from the 
+     ground. Some waypoints have different colours depending on their type.
+v.   Waypoints are saved in the RCBot/waypoints folder and then in the folder 
+     the same name as the MOD folder
+=-------------------=
+2. Waypoint Commands
+=-------------------=
+
+These are commands used in the console that will work.
+
+"rcbot waypoint on" : Displays waypoints
+"rcbot waypoint off" : Stops displaying waypoints
+
+"rcbot waypoint load" : Loads waypoints from file
+"rcbot waypoint save" : Saves waypoints to file
+
+"rcbot waypoint add" : Adds a waypoint
+"rcbot waypoint delete" : Deletes a waypoint
+
+"rcbot pathwaypoint enable"  : Enables the auto-generation of paths
+"rcbot pathwaypoint disable" : Disables the auto-generation of paths
+
+"rcbot pathwaypoint on"      : Displays paths from waypoints when you are close
+                             : to a waypoint
+"rcbot pathwaypoint off"     : Stops displaying paths from waypoints.
+
+"rcbot pathwaypoint create1" : Sets the waypoint you are at as the waypoint to
+                             : create a path FROM.
+"rcbot pathwaypoint create2" : Completes the path from the waypoint set in 'create1'
+                             : to this waypoint
+
+"rcbot pathwaypoint remove1" : Sets the waypoint you are at as the waypoint to
+                             : remove a path FROM.
+"rcbot pathwaypoint remove2" : Removes the path from the waypoint set in 'remove1'
+                             : to this waypoint
+
+=-------------------=
+3. Making Waypoints
+=-------------------=
+
+To clear something up first, You must waypoint in the game as you play it!
+
+To add a waypoint at your current position, use the command shown above ("waypoint add")
+keep adding waypoints at positions you think the bot would like to go.
+
+If you are unhappy about the position of a waypoint you can delete it by using the
+command above in section 2 ("waypoint delete") And you can add another one.
+
+You can then allow the displaying of paths for more sophisticated waypoints and edit paths
+if you are unhappy with them, you may need to create/remove paths.
+
+Read the waypoint tips section below on details...
+
+Also you may want to give the waypoint one or more types by using the waypoint menu
+Check out the Waypoint Types section and Waypoint Menu section on details!
+
+Waypointing Ladders
+-------------------
+
+Ladders are a bit difficult for bots, you should make the waypoints around ladders really simple to navigate.
+By that I mean, one path from each waypoint on the ladder and waypoints leading up to it. You should also place
+one normal waypoint nearby the first ladder waypoint so that bots will jump onto the ladder properly.
+
+see waypointingladders.htm in rcbot waypoints folder
+
+=-------------------=
+4. Waypoint tips
+=-------------------=
+
+These are tips on how to make the best waypoints so that bots
+don't get stuck a lot and take advantage of covering positions.
+=------------------------------------------------------------------------------
+i. Waypoint almost everywhere:
+
+ The bots in this version depend on waypoints much more than 
+ previous versions of the bot so it can find objects easily and
+ reduce the risk of it getting stuck while going to objects.
+
+ Each waypoint should have at least one path, unless it is pointless (Except for UNREACHABLE Waypoints)!
+=------------------------------------------------------------------------------
+ii. Don't add too many "OPENS LATER" waypoints:
+
+These waypoints take up some CPU because it has to find out
+if this area has been opened inside the path finding algorithm
+which also takes a lot of CPU up. IT is best to just have ONE of these
+waypoints per area and make sure they only have ONE path leading to them.
+
+Also make sure that no waypoints have paths going into an area that opens later
+that aren't "OPEN LATER" waypoints. If you already have an "OPEN LATER" waypoint
+in this area then remove the paths from it to the waypoints in the other area other
+than the "OPEN LATER" waypoint.
+=------------------------------------------------------------------------------
+iii. Always try to edit paths
+
+Paths that are added automatically aren't always perfect. You might need to add paths
+from one waypoint to another, because it may be much higher up/ much lower down or
+very far away for the automatic path making algorithm to make a path.
+
+To make a path from one waypoint to another, stand at the first waypoint and
+enter the console command "rcbot pathwaypoint create1" and then move to the other,
+(second waypoint),  and use the console command "rcbot pathwaypoint create2"
+=------------------------------------------------------------------------------
+iv. Editing paths again
+
+Paths that ARE added automatically may not be the best either, the automatic
+path algortihm might make paths through non-passable windows that you must remove.
+
+Also some paths can be very close to walls, and for a bot to make it through a path
+it must get its full body through it. So remove paths that are also to small to get
+to.
+
+To remove paths, you may need to put noclip_mode on, you can do this by using the
+console command "rcbot noclip_mode" and it will put noclip mode on you. You can type
+it again to put it back off.
+
+Goto the waypoint you want to remove the path FROM and use the console command:
+"rcbot pathwaypoint remove1" and then move to the second waypoint and use the
+console command "rcbot pathwaypoint remove2"
+=------------------------------------------------------------------------------
+v. Making paths yourself
+
+So you've been told the auto-path making algorithm can be a bit buggy at times.
+If you think you can do better at some places you can disable auto-generation of
+paths and create them yourself by using the methods described above.
+
+To disable auto-pathwaypoint generation you must use the console command:
+
+"rcbot pathwaypoint disable"
+
+to re-enable it use the command:
+
+"rcbot pathwaypoint enable"
+=------------------------------------------------------------------------------
+vi. Keep waypoints at a good distance in Open areas.
+
+It's good to have the least amount of waypoints on the map, simply because
+it's quicker for bots to find waypoints and goals. On more intricate parts
+of the map you should have a lot of waypoints close together.
+
+On open areas however you should keep the waypoints about as far apart as they 
+can go, example, when you go out of its range and it disappears.
+
+Excuse my bad ASCII art but this is how i like the waypoints to be like in open
+areas!:
+
+o = waypoint
+/,|,-,\,+ = paths
+
+      o
+     /|\
+    / | \
+   o--+--o
+  /|\ | /|\
+ / | \|/ | \
+o--+--o--+--o
+ \ | / \ | /
+  \|/   \|/
+   o     o
+
+etc.. :D, gives the bots a nice choice of paths to take and buts down the total
+amount of paths required.
+
+I've done this in afrikakorps3 map (in svencoop 3 beta)
+
+=-------------------=
+5. Waypoint Types
+=-------------------=
+
+NOTE: A waypoint can have more than one type:
+
+CROUCH
+--------------
+Tells the bot to crouch at these waypoints
+
+These are also made AUTOMATICALLY when you make a waypoint while 
+you are crouching.
+
+LADDER
+--------------
+Tells the bot there is a ladder here
+
+LIFT BUTTON
+--------------
+Tells the bot there is a button for a lift here
+
+HEALTH
+--------------
+
+Tells the bot there is health/health charger at this waypoint
+
+ARMOR
+--------------
+
+Tells the bot there is armor/batteries/recharger at this waypoint
+
+AMMO
+--------------
+
+Tells the bot there is ammo at this waypoint
+
+CROUCH JUMP
+--------------
+
+Tells the bot to crouch and then jump, which will also make the bot
+do a long jump if it has the long jump module.
+
+WAIT_FOR_LIFT	
+--------------
+
+Tells the bot to wait for a lift/door or similar object to be
+nearby the waypoint before moving onto it. The bot will also wait 
+up to 10 seconds, and if no lift appears it will continue.
+
+WALL_STICK	
+--------------	
+
+Tells the bot it can climb up the wall next to the waypoint.
+
+JUMP
+--------------
+
+Tells the bot to do a normal jump here, it will jump and then crouch
+to make sure it jumps high enough.
+
+WEAPON
+--------------
+
+Tells the bot there is a weapon here, if the bot doesn't have
+any useable weapons, it will look for a weapon waypoint to
+pick one up.
+
+TELEPORT
+--------------
+
+Tells the bot there is a teleport at this waypoint
+make sure to create paths from this waypoint to it's 
+destination(s).
+
+You may need to use "notouch" command to make a waypoint
+on the teleport.
+
+TANK
+--------------
+
+Tells the bot there is a useable tank/turret here.
+
+FLY
+--------------
+
+Tells the bot it can fly here.
+
+STAY NEAR
+--------------
+
+Tells the bot to slow down and stay close to this waypoint.
+Useful for small surfaces.
+
+END OF LEVEL / OBJECTIVE
+--------------
+
+Tells the bot there is an objective here or the 
+end of the level here, this is so the bots head
+toward this waypoint most of the time.
+
+OPENS LATER
+--------------
+
+Tells the bot that this waypoint is in an area
+which opens later. (e.g. a teleport which opens
+after a while in a map/or a door operated by a switch
+somewhere far away)
+
+NOTE: 
+
+Make sure only ONE path heads to this waypoint and NO OTHER paths
+connect to waypoints without being "open later" waypoints in the area
+that opens up later..
+
+These waypoints can use a lot of CPU if there are lot's of them
+so you need to keep only ONE at areas that open and use them to
+their full potential.
+
+HUMAN TOWER
+-----------
+
+Tells the bot to do a human tower with other players/bots here.
+
+If a bot/player is already crouching on the waypoint, a bot
+approaching the waypoint will jump on them and wait for the 
+player to jump if needed. If a player/bot isn't already crouching
+then they will crouch and wait for a while for a player/bot to
+jump on them, when a player/bot has jumped on them it will also jump
+to make the player standing on it go higher.
+
+UNREACHABLE
+-----------
+
+Bots do not use these waypoints, they are actually used for places that the
+bots should be able to take cover from. i.e. You should put these waypoints
+where enemies can go that bots cant.
+
+explaination : of unreachable types.
+
+i.   its mainly for svencoop
+ii.  some places the monsters can go places where bots cant go..
+iii. and if bots want to take cover from them they cant because they cant find a waypoint 
+     nearbly to find its visibility to other waypoints (to find a good cover waypoint)
+iv.  but if I put ordinary waypoints there then bots might think they can go there
+v.   so instead these should have the unreachable type  
+
+=-----------------=
+6. Waypoint Menu
+=-----------------=
+
+To Access the waypoint menu you should bind a key to the command:
+
+"rcbot waypoint_menu"
+
+The menu consists of options to alter the current waypoint you are standing
+at.
+
+The Main options are:
+
+Team Specific
+Give Flags
+Edit Paths
+
+-------------
+Team Specific
+-------------
+
+The team specific waypoint allows only players on a certain team to use this waypoint.
+
+If the current mod has more than one team, check out the rcbot_reference.txt file
+to get the team numbers for the mod.
+
+------------
+Give Flags
+------------
+
+There are lots of options here, as you can select "More" a few times.
+
+These just give the waypoint the types explained above in "Waypoint Types" section.
+
+------------
+Edit Paths
+------------
+
+This option opens a new menu that allows you to easily remove more than one path
+from/to or from and to this waypoint.
+
+ Remove All Paths:
+ -----------------
+ Removes every path going TO and FROM this waypoint.
+
+ Remove Paths TO:
+ ----------------
+ Removes every path going TO this waypoint.
+
+ Remove Paths FROM:
+ ------------------
+ Removes every path going FROM THIS waypoint to other waypoints.
+

@@ -117,6 +117,39 @@ for entry in "${consumers[@]}"; do
            --jq '.artifacts[] | "\(.name)\t\(.id)"')
 done
 
+# --------------------------------------------------------------------
+# Post-fetch reshape: overlay vendored upstream release-data onto each
+# per-arch rcbotold zip.
+#
+# Upstream APGRoboCop/rcbotold v1.51b13's release zip ships a curated
+# rcbot/ data tree (botprofiles, waypoints, visibility, map_configs,
+# manual, dlls/readme.txt) that the maintainer assembles by hand at
+# release time — those files don't live in any branch of the source
+# repo, so no per-consumer CI fix could fill the gap.  We vendor the
+# non-binary tree under vendor/rcbot-release-data/ and overlay it onto
+# every rcbotold-<arch>.zip after download.  Collisions (files our CI
+# already shipped) resolve to the vendored upstream version.
+# --------------------------------------------------------------------
+RCBOT_VENDOR="${RCBOT_VENDOR:-vendor/rcbot-release-data}"
+if [ -d "$RCBOT_VENDOR" ]; then
+  echo
+  echo "==== overlay vendored rcbot release-data ===="
+  RCBOT_VENDOR_ABS=$(cd "$RCBOT_VENDOR" && pwd)
+  OUT_DIR_ABS=$(cd "$OUT_DIR" && pwd)
+  for arch in linux-i386 linux-amd64 linux-aarch64 windows-i386 windows-amd64; do
+    z="$OUT_DIR_ABS/rcbotold-${arch}.zip"
+    [ -f "$z" ] || continue
+    tmpdir=$(mktemp -d)
+    ( cd "$tmpdir" && unzip -q "$z" )
+    cp -R "$RCBOT_VENDOR_ABS/." "$tmpdir/"
+    # Re-zip in place: delete old, create fresh from $tmpdir contents.
+    rm -f "$z"
+    ( cd "$tmpdir" && zip -qr "$z" . )
+    rm -rf "$tmpdir"
+    printf '  overlay: %s\n' "$(basename "$z")"
+  done
+fi
+
 echo
 echo "Done. Release assets in $OUT_DIR/ ($(ls -1 "$OUT_DIR" | wc -l) files):"
 ls -lah "$OUT_DIR/"
