@@ -26,3 +26,7 @@
 	path = hlsdk
 	url = https://github.com/goldsrc-net/hlsdk.git
 	branch = 64bit
+[submodule "build-containers"]
+	path = build-containers
+	url = https://github.com/goldsrc-net/build-containers.git
+	branch = main
