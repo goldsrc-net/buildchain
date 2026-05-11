@@ -110,12 +110,22 @@ DOCKER_RUN := $(DOCKER) run --rm -i \
 
 # Per-arch env. The image's default CC/CXX is clang-11 (inherited from
 # build-containers/debian10, matching upstream amxmodx's release CI),
-# so i386 / amd64 inherit it implicitly. aarch64 forces the gcc cross
-# compiler explicitly so AMBuild and any cmake
-# `EXISTS /usr/bin/aarch64-linux-gnu-gcc` probe pick it up.
+# so i386 / amd64 inherit it implicitly.
+#
+# aarch64 sets the cross-gcc explicitly for AMBuild-driven builds
+# (rcbot, Metamod-R, amxmodx) — gcc-aarch64-linux-gnu ships as a real
+# triplet-prefixed binary that AMBuild can `Popen()` directly. The
+# cmake-driven builds (halflife-updated, ReHLDS) override
+# CMAKE_C_COMPILER inside their toolchain files and pick clang-as-cross
+# automatically when it's available on the host (debian doesn't ship
+# triplet-prefixed clang, but clang is multi-target via --target=).
+# So `CC=aarch64-linux-gnu-gcc` here is for AMBuild only; cmake ignores
+# it and self-selects clang. Different compilers per build system on
+# aarch64 is intentional — ReHLDS's sse2neon.h needs gcc >= 10 or clang
+# (__has_builtin), and debian:buster's cross-gcc is 8.3.
 ENV_i386    :=
 ENV_amd64   :=
-ENV_aarch64 := CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AARCH64_USE_CLANG=1
+ENV_aarch64 := CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++
 
 # Project and arch enumerations — drive the per-tuple target generation
 # below so adding a project or an arch only requires touching one list.
