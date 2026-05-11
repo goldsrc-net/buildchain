@@ -1,3 +1,6 @@
+# CI signing keys — private, never committed.
+/ci-secrets/
+
 # Agent / IDE state — local-only, never committed.
 /.claude/
 /.serena/
