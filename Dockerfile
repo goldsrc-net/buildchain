@@ -1,126 +1,61 @@
 # hlds64-buildchain — reproducible build environment for amxmodx,
-# Metamod-R, halflife-updated, and ReHLDS on the 64bit branches.
+# Metamod-R, halflife-updated, ReHLDS, and rcbotold on the 64bit branches.
 #
-# Built on debian:12 (bookworm, glibc 2.36) so the resulting binaries
-# load cleanly on any glibc >= 2.36 host (including Soquartz4 / RPi5
-# debian-12 deployments).
+# Based on goldsrc-net/build-containers/debian10 — itself a goldsrc-net
+# fork of alliedmodders/build-containers/debian10 with multilib, the
+# aarch64 cross-toolchain + arm64 runtime sysroot, libmariadb-dev (+ per-
+# arch runtimes), cmake/rsync/nasm all pre-baked. Matching upstream's
+# amxmodx release-CI base means PRs filed upstream don't get rejected
+# for "couldn't reproduce on our environment" reasons.
 #
-# Three intended usage modes:
+# debian:buster's glibc (2.28) gives binaries a low floor — they run on
+# any host with glibc >= 2.28, including the goldsrc-net production
+# Soquartz4 SBC (debian-12, glibc 2.36). Forward-compat is the standard
+# direction here.
+#
+# Three intended usage modes (unchanged from the prior debian:12 base):
 #   1. Native x86_64 build (default platform): produces i386 / amd64 .so
 #   2. Native aarch64 build (--platform=linux/arm64, requires qemu-user
 #      + binfmt_misc on the host): produces aarch64 .so
 #   3. Cross-compile aarch64 from x86_64 host: uses the aarch64 cross
-#      toolchain installed below; faster than emulation, link-tested
-#      against a debian-12 sysroot
+#      toolchain pre-installed in the base image
 #
 # The orchestrator (Makefile in this directory) handles invocation;
 # see README.md.
 
-FROM debian:12
+FROM ghcr.io/goldsrc-net/build-containers/debian10:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc-11 g++-11 \
-    make libc6-dev \
-    \
-    git \
-    curl \
-    ca-certificates \
-    \
-    nasm \
-    \
-    python3 python3-pip python3-venv python-is-python3 \
-    \
-    cmake \
-    ninja-build \
-    pkg-config \
-    \
-    file \
-    binutils \
-    \
-    && rm -rf /var/lib/apt/lists/* \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100 \
- && update-alternatives --install /usr/bin/cc  cc  /usr/bin/gcc-11 100 \
- && update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-11 100
+# The base image already provides (clang-11 + gcc-multilib + nasm + cmake
+# + rsync + libmariadb-dev + aarch64 cross-toolchain + arm64 runtime
+# sysroot + ambuild). We just need a couple of utilities the Makefile
+# recipes rely on but the upstream image omits.
+RUN apt-get -o Acquire::Check-Valid-Until=false update && \
+    apt-get install -y --no-install-recommends \
+      file binutils pkg-config python3-venv \
+ && rm -rf /var/lib/apt/lists/*
 
-# Multilib (32-bit x86) is only available on amd64. On arm64 there is
-# no multilib analog — the i386 build path doesn't apply there anyway,
-# but on amd64 we want it for the i386 amxmodx target.
-#
-# linux-libc-dev:i386 supplies /usr/include/i386-linux-gnu/asm/errno.h
-# and friends, which `cc -m32` searches for. gcc-multilib brings in
-# the 64-bit variant only.
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      dpkg --add-architecture i386 \
-      && apt-get update && apt-get install -y --no-install-recommends \
-        gcc-11-multilib g++-11-multilib \
-        libc6-dev-i386 linux-libc-dev:i386 \
-      && rm -rf /var/lib/apt/lists/*; \
-    fi
+# debian:buster's apt cmake is 3.13.4; AsmJit (Metamod-R / amxmodx
+# submodule pin 0bd5787 and later) requires cmake >= 3.24. Install
+# Kitware's official prebuilt cmake binary into /usr/local — bypasses
+# pip entirely (debian:buster's pip 18 can't parse modern
+# pyproject.toml). /usr/local/bin is ahead of /usr/bin in PATH so this
+# transparently shadows the apt cmake.
+RUN CMAKE_VERSION=3.29.6 \
+ && curl -sSL "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" \
+    | tar -xz -C /usr/local --strip-components=1
 
-# aarch64 cross-toolchain + arm64 multi-arch runtime sysroot. The
-# sysroot is the load-bearing piece: AMBuild's DetectCxx compiles a
-# probe binary then *executes* it. The kernel's binfmt_misc routes
-# aarch64 ELFs through qemu-user-static; QEMU then needs
-# /lib/ld-linux-aarch64.so.1 + libc to actually load. Without the
-# sysroot the probe fails and AMBuild reports "Unable to find a
-# suitable CC compiler".
-#
-# On arm64 hosts (--platform=linux/arm64) this whole block is skipped —
-# the host gcc IS aarch64 native and no sysroot is needed.
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      dpkg --add-architecture arm64 \
-      && apt-get update && apt-get install -y --no-install-recommends \
-        gcc-11-aarch64-linux-gnu g++-11-aarch64-linux-gnu \
-        binutils-aarch64-linux-gnu \
-        libc6-dev-arm64-cross \
-        libc6:arm64 libstdc++6:arm64 \
-      && rm -rf /var/lib/apt/lists/*; \
-    fi
+# Provide an `ambuild-python` wrapper so existing Makefile recipes work
+# unchanged. The base image installs ambuild via pip3 (into system
+# python) and exposes /usr/local/bin/ambuild; this wrapper just execs
+# the same python.
+RUN printf '#!/bin/sh\nexec /usr/bin/python3 "$@"\n' > /usr/local/bin/ambuild-python \
+ && chmod +x /usr/local/bin/ambuild-python
 
-# Provide unversioned cross-toolchain aliases so AMBuild can pick them
-# up via CC=aarch64-linux-gnu-gcc / CXX=aarch64-linux-gnu-g++. Symlinks
-# live in /usr/bin/ so CMake toolchain files that probe for
-# `EXISTS /usr/bin/aarch64-linux-gnu-gcc` (halflife-updated/cmake/
-# LinuxToolchain-aarch64.cmake, ReHLDS/cmake/aarch64-linux-gnu.toolchain.cmake)
-# pick them up automatically — no AARCH64_GCC env override needed.
-# Only matters on amd64 hosts.
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      ln -sf /usr/bin/aarch64-linux-gnu-gcc-11  /usr/bin/aarch64-linux-gnu-gcc; \
-      ln -sf /usr/bin/aarch64-linux-gnu-g++-11  /usr/bin/aarch64-linux-gnu-g++; \
-    fi
-
-# MariaDB Connector/C — needed by amxmodx's mysqlx module. Debian's
-# libmariadb-dev ships headers in a single non-multiarch path, so we
-# can only install the dev package for one arch (amd64) — that gives
-# us the headers + amd64 static lib. For the other archs we install
-# the runtime-only libmariadb3:<arch> package (provides
-# libmariadb.so.3 in /usr/lib/<triplet>/) and link dynamically against
-# it. The deploy host needs libmariadb3 installed, which is the
-# default any time MariaDB / MySQL is in play.
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-      apt-get update && apt-get install -y --no-install-recommends \
-        libmariadb-dev \
-        libmariadb3:i386 libmariadb3:arm64 \
-      && rm -rf /var/lib/apt/lists/*; \
-    fi
-
-# AMBuild from upstream master. Not on PyPI; install from source.
-# Symlinks lose the venv context (they resolve to system python), so we
-# use small wrapper scripts that exec the venv interpreter directly.
-RUN python3 -m venv /opt/ambuild-venv \
- && /opt/ambuild-venv/bin/pip install --no-cache-dir \
-      git+https://github.com/alliedmodders/ambuild.git \
- && printf '#!/bin/sh\nexec /opt/ambuild-venv/bin/ambuild "$@"\n' > /usr/local/bin/ambuild \
- && printf '#!/bin/sh\nexec /opt/ambuild-venv/bin/python "$@"\n'  > /usr/local/bin/ambuild-python \
- && chmod +x /usr/local/bin/ambuild /usr/local/bin/ambuild-python
-
-# NASM smoke-test: confirm the system nasm assembles a `section .text`
-# / `global` source. The Ubuntu ESM 2.16.01-1ubuntu0.1~esm1 build is
-# broken; the Debian 12 build is fine. Bake the test into the image so
-# we fail fast on a regression.
+# NASM smoke-test — confirms the system nasm assembles a minimal
+# `section .text` / `global` source. Fails the image build immediately
+# on a regression rather than during the first amxmodx build.
 RUN printf 'section .text\nglobal foo\nfoo:\n    ret\n' > /tmp/nasm-smoke.asm \
  && nasm -f elf32 /tmp/nasm-smoke.asm -o /tmp/nasm-smoke.o \
  && rm /tmp/nasm-smoke.asm /tmp/nasm-smoke.o \
@@ -130,14 +65,17 @@ RUN printf 'section .text\nglobal foo\nfoo:\n    ret\n' > /tmp/nasm-smoke.asm \
 WORKDIR /work
 
 # Sanity: print versions on container start so build logs show the
-# exact toolchain used.
+# exact toolchain used. The base sets CC=clang-11 / CXX=clang++-11.
 CMD ["bash", "-lc", "set -e; \
       echo '--- toolchain versions ---'; \
       gcc --version | head -1; \
       g++ --version | head -1; \
-      if command -v aarch64-linux-gnu-gcc >/dev/null; then aarch64-linux-gnu-gcc --version | head -1; fi; \
+      command -v clang >/dev/null && clang --version | head -1 || echo 'clang: not found'; \
+      command -v aarch64-linux-gnu-gcc >/dev/null && aarch64-linux-gnu-gcc --version | head -1 || true; \
       nasm -v; \
       ambuild --help 2>&1 | head -1; \
+      cmake --version | head -1; \
+      echo \"glibc: $(ldd --version | head -1)\"; \
       uname -m; \
       echo '--- ready ---'; \
       exec bash"]

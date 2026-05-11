@@ -39,7 +39,7 @@
 
 # --- configuration --------------------------------------------------
 
-IMAGE      := hlds64-buildchain:debian12
+IMAGE      := hlds64-buildchain:debian10
 
 SRC_ROOT   ?= $(CURDIR)
 RCBOT      := $(or $(RCBOT_PATH),$(SRC_ROOT)/rcbotold)
@@ -108,12 +108,14 @@ DOCKER_RUN := $(DOCKER) run --rm -i \
                 $(VOLS) \
                 $(IMAGE)
 
-# Per-arch env. aarch64 forces the cross-compiler explicitly so AMBuild
-# and any cmake `EXISTS /usr/bin/aarch64-linux-gnu-gcc` probe both pick
-# it up; i386 / amd64 use the buildchain's native gcc-12.
+# Per-arch env. The image's default CC/CXX is clang-11 (inherited from
+# build-containers/debian10, matching upstream amxmodx's release CI),
+# so i386 / amd64 inherit it implicitly. aarch64 forces the gcc cross
+# compiler explicitly so AMBuild and any cmake
+# `EXISTS /usr/bin/aarch64-linux-gnu-gcc` probe pick it up.
 ENV_i386    :=
 ENV_amd64   :=
-ENV_aarch64 := CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++
+ENV_aarch64 := CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ AARCH64_USE_CLANG=1
 
 # Project and arch enumerations — drive the per-tuple target generation
 # below so adding a project or an arch only requires touching one list.
