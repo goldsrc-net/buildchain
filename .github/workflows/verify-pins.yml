@@ -1,0 +1,31 @@
+name: Verify pins
+
+# Fail early if any consumer-repo submodule pin doesn't have a green
+# CI run on the pinned SHA.  Run on push to main, on PRs that touch
+# the buildchain, and on demand.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    name: Consumer-repo pin provenance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout buildchain
+        uses: actions/checkout@v5
+        # No submodules needed — the script reads the pinned SHA from
+        # the index without fetching submodule contents.
+
+      - name: Verify each pin has green CI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/verify-pins.sh

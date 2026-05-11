@@ -8,3 +8,10 @@
 # Build outputs land inside each consumer-project submodule
 # (build-<arch>/ for cmake, build_<arch>/ for AMBuild) — those are
 # tracked by each submodule's own .gitignore.
+
+# Release zips assembled by scripts/fetch-release-artifacts.sh
+# (downloaded from consumer CI runs; produced fresh on demand).
+/release-assets/
+
+# Local notes — agent transcripts, working drafts.
+/notes/
