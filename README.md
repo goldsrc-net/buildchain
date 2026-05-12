@@ -368,6 +368,24 @@ lets you grab exactly what your install needs (e.g. just
 `rehlds-linux-aarch64.zip` + `metamod-r-linux-aarch64.zip` for a
 plain ReHLDS arm64 server) without unpacking a megazip.
 
+### Drop-in releases (turnkey overlay)
+
+Each release also ships **5 per-arch `hlds-dropin-<os>-<arch>.zip`**
+overlays.  Extract on top of a stock Anniversary HLDS install
+(`steamcmd +app_update 90`) and the full goldsrc-net stack
+(ReHLDS engine, halflife-updated, Metamod-R, amxmodx, rcbot, plus
+Valve's Steam runtime libs pinned from `client-update.steamstatic.com`)
+is wired up:
+
+```bash
+cd ~/hlds && curl -fsSL -o /tmp/d.zip \
+  https://github.com/goldsrc-net/buildchain/releases/latest/download/hlds-dropin-linux-aarch64.zip
+unzip -o /tmp/d.zip && bash apply-liblist.sh && ./hlds_run -game valve +map crossfire +maxplayers 16
+```
+
+Pipeline: `.github/workflows/release-dropins.yml` invokes
+`scripts/build-dropins.sh` on `v*` tag push.
+
 ### Vendored upstream rcbot release-data
 
 `vendor/rcbot-release-data/` holds a non-binary snapshot of
