@@ -207,9 +207,11 @@ build-halflife-updated-amd64:   ; $(call CMAKE_RECIPE,halflife-updated,amd64,bui
 build-halflife-updated-aarch64: ; $(call CMAKE_RECIPE,halflife-updated,aarch64,build-aarch64,$(HU_TC_AARCH64),--target hl)
 
 REHLDS_TC_AARCH64 := -DCMAKE_TOOLCHAIN_FILE=/work/ReHLDS/cmake/aarch64-linux-gnu.toolchain.cmake
+# ENABLE_QUIC cross-builds quiche via cargo from this same container, so
+# libquiche.a inherits the glibc 2.28 floor. i386 stays non-QUIC for now.
 build-rehlds-i386:          ; $(call CMAKE_RECIPE,ReHLDS,i386,build-i386,,)
-build-rehlds-amd64:         ; $(call CMAKE_RECIPE,ReHLDS,amd64,build-amd64,-DBUILD_AMD64=ON,)
-build-rehlds-aarch64:       ; $(call CMAKE_RECIPE,ReHLDS,aarch64,build-aarch64,$(REHLDS_TC_AARCH64),)
+build-rehlds-amd64:         ; $(call CMAKE_RECIPE,ReHLDS,amd64,build-amd64,-DBUILD_AMD64=ON -DENABLE_QUIC=ON,)
+build-rehlds-aarch64:       ; $(call CMAKE_RECIPE,ReHLDS,aarch64,build-aarch64,$(REHLDS_TC_AARCH64) -DENABLE_QUIC=ON,)
 
 # --- build-<proj> — per-project aggregate ---------------------------
 

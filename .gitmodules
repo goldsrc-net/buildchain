@@ -17,7 +17,7 @@
 [submodule "ReHLDS"]
 	path = ReHLDS
 	url = https://github.com/goldsrc-net/ReHLDS.git
-	branch = 64bit
+	branch = quic
 [submodule "metamod-hl1"]
 	path = metamod-hl1
 	url = https://github.com/alliedmodders/metamod-hl1.git
