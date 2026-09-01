@@ -206,6 +206,15 @@ build-halflife-updated-i386:    ; $(call CMAKE_RECIPE,halflife-updated,i386,buil
 build-halflife-updated-amd64:   ; $(call CMAKE_RECIPE,halflife-updated,amd64,build-amd64,,--target hl)
 build-halflife-updated-aarch64: ; $(call CMAKE_RECIPE,halflife-updated,aarch64,build-aarch64,$(HU_TC_AARCH64),--target hl)
 
+# 64-bit client DLL (cl_dlls/client.so) for the Xash3D-FWGS-hosted client: static openvgui +
+# the vgui_support shim (client exports InitVGUISupportAPI, "client-hosted VGUI"), no SDL2 —
+# see halflife-updated/cl_dll/CMakeLists.txt HALFLIFE_VGUI_STATIC. Needs the
+# third_party/{openvgui,vgui_support} submodules checked out. Separate from the hl targets so
+# `make build` is unchanged; there is no i386 client target (32-bit keeps Valve's vgui.so/SDL2).
+build-halflife-updated-client-amd64:   ; $(call CMAKE_RECIPE,halflife-updated,amd64,build-amd64,,--target client)
+build-halflife-updated-client-aarch64: ; $(call CMAKE_RECIPE,halflife-updated,aarch64,build-aarch64,$(HU_TC_AARCH64),--target client)
+build-halflife-updated-client: build-halflife-updated-client-amd64 build-halflife-updated-client-aarch64
+
 REHLDS_TC_AARCH64 := -DCMAKE_TOOLCHAIN_FILE=/work/ReHLDS/cmake/aarch64-linux-gnu.toolchain.cmake
 # ENABLE_QUIC cross-builds quiche via cargo from this same container, so
 # libquiche.a inherits the glibc 2.28 floor. i386 stays non-QUIC for now.
@@ -360,6 +369,7 @@ help:
 	@echo '  make build-<project>             # one project, every arch'
 	@echo '  make build-<arch>                # every project, one arch'
 	@echo '  make build-<project>-<arch>      # one project, one arch'
+	@echo '  make build-halflife-updated-client[-amd64|-aarch64]  # 64-bit client.so (static openvgui, no SDL)'
 	@echo ''
 	@echo '  make clean[-<project>][-<arch>]  # wipe build dirs, same shape'
 	@echo ''
@@ -405,6 +415,7 @@ help:
 .PHONY: build-metamod-r-i386 build-metamod-r-amd64 build-metamod-r-aarch64
 .PHONY: build-amxmodx-i386 build-amxmodx-amd64 build-amxmodx-aarch64
 .PHONY: build-halflife-updated-i386 build-halflife-updated-amd64 build-halflife-updated-aarch64
+.PHONY: build-halflife-updated-client build-halflife-updated-client-amd64 build-halflife-updated-client-aarch64
 .PHONY: build-rehlds-i386 build-rehlds-amd64 build-rehlds-aarch64
 .PHONY: build-i386 build-amd64 build-aarch64
 .PHONY: clean-rcbot clean-metamod-r clean-amxmodx clean-halflife-updated clean-rehlds
