@@ -159,12 +159,15 @@ toolchain matrix upstream amxmodx uses for its release CI:
   projects (rcbot, Metamod-R AMBuild path, amxmodx) stay on gcc-8.3
   cross — they build clean without sse2neon.
 - **MariaDB Connector/C 3.1.21** static-link staging trees at
-  `/opt/mariadb-static-{i386,amd64,aarch64}/`.  Each tree carries
-  `include/` (`mysql.h`) and `lib/libmysqlclient_r.a` (renamed from
-  `libmariadbclient.a` to match the upstream filename amxmodx's
-  `mysqlx/AMBuilder` hardcodes).  Built `mysql_amxx_*.so` modules have
-  no `libmariadb.so.3` in NEEDED — fully self-contained, no
-  `apt install libmariadb3` required on deploy hosts.
+  `/opt/mariadb-static-{i386,amd64,aarch64}/`, built from source per
+  arch.  Each tree carries `include/` (`mysql.h`) and
+  `lib/libmysqlclient_r.a` (the filename amxmodx's `mysqlx/AMBuilder`
+  hardcodes): the client with OpenSSL's static libraries folded in and
+  the MySQL 8 / MariaDB authentication plugins compiled in.  Debian's
+  own `libmariadbclient.a` is built against GnuTLS, which a server
+  usually doesn't have loaded, so the module failed to load.  Built
+  `mysql_amxx_*.so` modules need only libc, libstdc++ and friends: no
+  `apt install libmariadb3` or TLS library on deploy hosts.
 - **NASM 2.14** (smoke-tested at image-build time).
 - **AMBuild 2.0** from upstream master, exposed via `/usr/local/bin/ambuild`
   and `/usr/local/bin/ambuild-python` wrapper scripts that exec the
@@ -216,9 +219,12 @@ the binary; just consumes the header).
 
 `--mysql=/opt/mariadb-static-<arch>` points `modules/mysqlx/AMBuilder`
 at the per-arch MariaDB Connector/C 3.1.21 staging tree baked into the
-docker image.  The resulting `mysql_amxx_<arch>.so` has no
-`libmariadb.so.3` in NEEDED — fully self-contained, drops in on any
-deploy host without installing libmariadb3 separately.  The same
+docker image.  The module links it with `--exclude-libs,ALL`, so the
+client's and OpenSSL's symbols stay inside the module instead of
+clashing with another copy in the server process.  The resulting
+`mysql_amxx_<arch>.so` has no `libmariadb.so.3` in NEEDED — fully
+self-contained, drops in on any deploy host without installing
+libmariadb3 separately.  The same
 approach is used by the consumer-CI Windows builds, which extract the
 MariaDB Connector/C 3.1.21 MSI on the runner and link the bundled
 `mariadbclient.lib` statically.
